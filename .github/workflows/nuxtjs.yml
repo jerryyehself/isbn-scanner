@@ -2,7 +2,7 @@ name: Deploy Nuxt 3 site to GitHub Pages
 
 on:
     push:
-        branches: ['master']
+        branches: ['master', 'feature/**']
     workflow_dispatch:
 
 permissions:
