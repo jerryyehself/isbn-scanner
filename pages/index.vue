@@ -68,6 +68,18 @@
 		scannerInstance = new Html5QrcodeScanner('scanner', {
 			fps: 10,
 			qrbox: { width: 280, height: 180 }, // 針對長條形 ISBN 調整
+			facingMode: { exact: 'environment' },
+			resolution: 1024, //解析度
+			scale: 5.0, //啟用等比縮放
+			area: 0.3, //擴展QR code的區域
+			findLight: true, //尋找光點
+			colorInvert: true, //色彩反轉
+			angle: -90, //設置掃描視角
+			minimumBlur: 0.01, //最小模糊程度
+			cameraIdOrConfig: {
+				facingMode: 'environment',
+				zoom: 3.0,
+			}, //設定鏡頭的縮放比例
 		});
 
 		scannerInstance.render((barcode) => {
