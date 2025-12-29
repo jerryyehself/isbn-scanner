@@ -1,1 +1,0 @@
-export { START_LOCATION, useRoute } from 'vue-router'

@@ -1,9 +1,9 @@
 {
-  "_hash": "hlkwAHF7rI4oZdfEGw1bTEPseg3w7NTPy4mMSa8gIow",
+  "_hash": "E3lZcq1yJW4DtWl3qtxA6a5X0S4-BteWgYB_yish-Tg",
   "project": {
     "rootDir": "/Users/jerryyeh/isbn-scanner"
   },
   "versions": {
-    "nuxt": "4.2.2"
+    "nuxt": "3.20.2"
   }
 }

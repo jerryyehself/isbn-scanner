@@ -1,4 +1,4 @@
-import { NuxtModule, ModuleDependencyMeta } from '@nuxt/schema'
+import { NuxtModule, ModuleDependencyMeta, RuntimeConfig } from '@nuxt/schema'
 declare module '@nuxt/schema' {
   interface ModuleDependencies {
     ["@nuxt/devtools"]?: ModuleDependencyMeta<typeof import("@nuxt/devtools").default extends NuxtModule<infer O> ? O : Record<string, unknown>>
@@ -56,4 +56,27 @@ declare module 'nuxt/schema' {
     ["telemetry"]?: typeof import("@nuxt/telemetry").default extends NuxtModule<infer O, unknown, boolean> ? Partial<O> : Record<string, any>
     modules?: (undefined | null | false | NuxtModule<any> | string | [NuxtModule | string, Record<string, any>] | ["@nuxt/devtools", Exclude<NuxtConfig["devtools"], boolean>] | ["@nuxt/telemetry", Exclude<NuxtConfig["telemetry"], boolean>])[],
   }
+  interface RuntimeConfig {
+   app: {
+      buildId: string,
+
+      baseURL: string,
+
+      buildAssetsDir: string,
+
+      cdnURL: string,
+   },
+
+   nitro: {
+      envPrefix: string,
+   },
+  }
+  interface PublicRuntimeConfig {
+
+  }
 }
+declare module 'vue' {
+        interface ComponentCustomProperties {
+          $config: RuntimeConfig
+        }
+      }

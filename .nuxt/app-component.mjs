@@ -1,1 +1,0 @@
-export { default } from "/Users/jerryyeh/isbn-scanner/node_modules/nuxt/dist/pages/runtime/app.vue";
