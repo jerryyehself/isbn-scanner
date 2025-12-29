@@ -3,7 +3,7 @@ import { $fetch } from "/Users/jerryyeh/isbn-scanner/node_modules/ofetch/dist/no
 import { baseURL } from "#internal/nuxt/paths";
 import { createHooks } from "/Users/jerryyeh/isbn-scanner/node_modules/hookable/dist/index.mjs";
 import { getContext, executeAsync } from "/Users/jerryyeh/isbn-scanner/node_modules/unctx/dist/index.mjs";
-import { sanitizeStatusCode, createError as createError$1 } from "/Users/jerryyeh/isbn-scanner/node_modules/h3/dist/index.mjs";
+import { sanitizeStatusCode, createError as createError$1, appendHeader } from "/Users/jerryyeh/isbn-scanner/node_modules/h3/dist/index.mjs";
 import { START_LOCATION, createMemoryHistory, createRouter as createRouter$1, useRoute as useRoute$2, RouterView } from "vue-router";
 import { toRouteMatcher, createRouter } from "/Users/jerryyeh/isbn-scanner/node_modules/radix3/dist/index.mjs";
 import { defu } from "/Users/jerryyeh/isbn-scanner/node_modules/defu/dist/defu.mjs";
@@ -235,6 +235,9 @@ function defineGetter(obj, key, val) {
 }
 const LayoutMetaSymbol = /* @__PURE__ */ Symbol("layout-meta");
 const PageRouteSymbol = /* @__PURE__ */ Symbol("route");
+function toArray$1(value) {
+  return Array.isArray(value) ? value : [value];
+}
 import.meta.url.replace(/\/app\/.*$/, "/");
 const useRouter$1 = () => {
   return useNuxtApp()?.$router;
@@ -474,6 +477,7 @@ const configRouterOptions = {
   hashMode: false,
   scrollBehaviorType: "auto"
 };
+const hashMode = false;
 const routerOptions = {
   ...configRouterOptions,
   ...routerOptions0
@@ -514,7 +518,7 @@ const plugin = /* @__PURE__ */ defineNuxtPlugin({
     let __temp, __restore;
     let routerBase = (/* @__PURE__ */ useRuntimeConfig()).app.baseURL;
     const history = routerOptions.history?.(routerBase) ?? createMemoryHistory(routerBase);
-    const routes = routerOptions.routes ? ([__temp, __restore] = executeAsync(() => routerOptions.routes(_routes)), __temp = await __temp, __restore(), __temp) ?? _routes : _routes;
+    const routes2 = routerOptions.routes ? ([__temp, __restore] = executeAsync(() => routerOptions.routes(_routes)), __temp = await __temp, __restore(), __temp) ?? _routes : _routes;
     let startPosition;
     const router = createRouter$1({
       ...routerOptions,
@@ -535,7 +539,7 @@ const plugin = /* @__PURE__ */ defineNuxtPlugin({
         }
       },
       history,
-      routes
+      routes: routes2
     });
     nuxtApp.vueApp.use(router);
     const previousRoute = shallowRef(router.currentRoute.value);
@@ -34067,13 +34071,61 @@ const vuetify_hjFy4UiBVKu2U8_BW9ggkFzfvErKr3wFgTHpa6TF5Ds = /* @__PURE__ */ defi
   });
   nuxtApp.vueApp.use(vuetify);
 });
+function useRequestEvent(nuxtApp) {
+  nuxtApp ||= useNuxtApp();
+  return nuxtApp.ssrContext?.event;
+}
+function prerenderRoutes(path) {
+  if (!import.meta.prerender) {
+    return;
+  }
+  const paths = toArray$1(path);
+  appendHeader(useRequestEvent(), "x-nitro-prerender", paths.map((p) => encodeURIComponent(p)).join(", "));
+}
+let routes;
+const prerender_server_sqIxOBipVr4FbVMA9kqWL0wT8FPop6sKAXLVfifsJzk = /* @__PURE__ */ defineNuxtPlugin(async () => {
+  let __temp, __restore;
+  if (!import.meta.prerender || hashMode) {
+    return;
+  }
+  if (routes && !routes.length) {
+    return;
+  }
+  (/* @__PURE__ */ useRuntimeConfig()).nitro.routeRules;
+  routes ||= Array.from(processRoutes(([__temp, __restore] = executeAsync(() => routerOptions.routes?.(_routes)), __temp = await __temp, __restore(), __temp) ?? _routes));
+  const batch = routes.splice(0, 10);
+  prerenderRoutes(batch);
+});
+const OPTIONAL_PARAM_RE = /^\/?:.*(?:\?|\(\.\*\)\*)$/;
+function shouldPrerender(path) {
+  return true;
+}
+function processRoutes(routes2, currentPath = "/", routesToPrerender = /* @__PURE__ */ new Set()) {
+  for (const route of routes2) {
+    if (OPTIONAL_PARAM_RE.test(route.path) && !route.children?.length && shouldPrerender()) {
+      routesToPrerender.add(currentPath);
+    }
+    if (route.path.includes(":")) {
+      continue;
+    }
+    const fullPath = joinURL(currentPath, route.path);
+    {
+      routesToPrerender.add(fullPath);
+    }
+    if (route.children) {
+      processRoutes(route.children, fullPath, routesToPrerender);
+    }
+  }
+  return routesToPrerender;
+}
 const plugins = [
   unhead_k2P3m_ZDyjlr2mMYnoDPwavjsDN8hBlk9cFai0bbopU,
   plugin,
   revive_payload_server_MVtmlZaQpj6ApFmshWfUWl5PehCebzaBf2NuRMiIbms,
   components_plugin_z4hgvsiddfKkfXTP6M8M4zG5Cb7sGnDhcryKVM45Di4,
   pinia_Ab1D_QMMf_egrzVdVYpZ5xs6QSwaKU60pkFvRWVq_9Y,
-  vuetify_hjFy4UiBVKu2U8_BW9ggkFzfvErKr3wFgTHpa6TF5Ds
+  vuetify_hjFy4UiBVKu2U8_BW9ggkFzfvErKr3wFgTHpa6TF5Ds,
+  prerender_server_sqIxOBipVr4FbVMA9kqWL0wT8FPop6sKAXLVfifsJzk
 ];
 const layouts = {
   default: defineAsyncComponent(() => import("./_nuxt/default-TYVD2diV.js").then((m) => m.default || m))

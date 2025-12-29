@@ -11,4 +11,7 @@ export default defineNuxtConfig({
 	app: {
 		baseURL: '/isbn-scanner/',
 	},
+	nitro: {
+		preset: 'static',
+	},
 });
