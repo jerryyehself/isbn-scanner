@@ -65,9 +65,10 @@ jobs:
                   path: |
                       dist
                       .nuxt
-                  key: ${{ runner.os }}-build-${{ hashFiles('package-lock.json') }}
-                  restore-keys: |
-                      ${{ runner.os }}-nuxt-build-
+                      # 建議合併 package-lock.json 與 yarn.lock 的判定，避免切換工具時報錯
+                key: ${{ runner.os }}-nuxt-build-${{ hashFiles('**/package-lock.json', '**/yarn.lock') }}
+                restore-keys: |
+                    ${{ runner.os }}-nuxt-build-
             - name: Install dependencies
               run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
             - name: Static HTML export with Nuxt
