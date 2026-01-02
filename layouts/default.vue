@@ -28,9 +28,10 @@
 					nav
 					item-props />
 			</v-navigation-drawer>
-			<v-main>
+			<v-main class="d-flex flex-column overflow-hidden">
 				<v-container
-					class="h-100 align-center justify-center d-flex flex-column">
+					fluid
+					class="pa-0 flex-grow-1 fill-height">
 					<slot />
 				</v-container>
 			</v-main>
