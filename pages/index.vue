@@ -108,7 +108,7 @@
 
 	const stopScan = async () => {
 		if (html5QrCode) {
-			// await html5QrCode.stop();
+			await html5QrCode.stop();
 			await html5QrCode.clear();
 			html5QrCode = null;
 		}
