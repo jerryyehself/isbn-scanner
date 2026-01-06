@@ -62,8 +62,8 @@
 
 			<v-sheet
 				class="flex-grow-1 d-flex flex-column align-center justify-center bg-white pa-6">
-				<list></list>
-				<!-- <v-icon
+				<!-- <list></list> -->
+				<v-icon
 					size="64"
 					color="grey-lighten-2"
 					icon="mdi-book-open-variant" />
@@ -72,7 +72,7 @@
 				</div>
 				<div class="text-caption text-grey-darken-1 mt-2">
 					掃描完成後將自動顯示書籍資訊
-				</div> -->
+				</div>
 			</v-sheet>
 		</v-col>
 	</v-row>
