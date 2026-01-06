@@ -98,7 +98,13 @@
 			},
 			{
 				fps: 10,
-				qrbox: { width: 280, height: 180 }, // ISBN 長條
+				qrbox: (vw, vh) => {
+					const width = Math.min(vw * 0.8, 320);
+					return {
+						width,
+						height: width * 0.5, // ISBN 長條
+					};
+				},
 				disableFlip: true,
 			},
 			(decodedText) => {
