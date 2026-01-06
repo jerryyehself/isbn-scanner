@@ -5,6 +5,7 @@
 			<div
 				style="height: 15em"
 				class="d-flex align-center justify-center flex-column ga-2">
+				<!-- 未掃描 -->
 				<v-btn
 					v-if="!isScanning"
 					variant="text"
@@ -26,25 +27,31 @@
 					</div>
 				</v-btn>
 
+				<!-- 掃描中 -->
 				<v-card
 					v-else
-					class="w-100"
-					style=""
+					class="w-100 h-100 d-flex flex-column"
 					elevation="4">
+					<!-- 固定高度 toolbar -->
 					<v-toolbar
 						color="white"
-						density="compact">
-						<v-spacer></v-spacer>
+						density="compact"
+						style="height: 48px; flex-shrink: 0">
+						<v-spacer />
 						<v-btn
 							icon="mdi-close"
-							@click="stopScan"></v-btn>
+							@click="stopScan" />
 					</v-toolbar>
 
-					<div
-						id="scanner"
-						class="w-100"></div>
+					<!-- scanner 吃剩餘高度 -->
+					<div class="flex-grow-1 overflow-hidden">
+						<div
+							id="scanner"
+							class="w-100 h-100"></div>
+					</div>
 
-					<v-card-text class="text-center">
+					<!-- 提示文字不撐高 -->
+					<v-card-text class="text-center py-1 flex-shrink-0">
 						<v-chip
 							prepend-icon="mdi-information"
 							variant="text">
