@@ -10,7 +10,7 @@
 					variant="text"
 					style="
 						width: 100%;
-						max-width: 360px; /* 手機安全寬度 */
+						max-width: 360px;
 						height: 96px;
 						border: 2px dashed #ccc;
 					"
@@ -29,7 +29,7 @@
 				<v-card
 					v-else
 					class=""
-					style="height: 100%; width: 100%"
+					style=""
 					elevation="4">
 					<v-toolbar
 						color="white"
