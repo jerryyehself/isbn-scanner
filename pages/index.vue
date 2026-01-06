@@ -28,7 +28,7 @@
 
 				<v-card
 					v-else
-					class=""
+					class="w-100"
 					style=""
 					elevation="4">
 					<v-toolbar
