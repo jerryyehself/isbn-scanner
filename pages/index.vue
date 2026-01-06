@@ -8,7 +8,7 @@
 				<v-btn
 					v-if="!isScanning"
 					variant="text"
-					style="height: 100%; border: 2px dashed #ccc"
+					style="height: 50%; width: 25%; border: 2px dashed #ccc"
 					@click="startScan">
 					<div class="d-flex flex-column align-center justify-center">
 						<v-icon
@@ -27,9 +27,8 @@
 					style="height: 100%; width: 100%"
 					elevation="4">
 					<v-toolbar
-						color="none"
+						color="white"
 						density="compact">
-						<v-toolbar-title>正在讀取條碼...</v-toolbar-title>
 						<v-spacer></v-spacer>
 						<v-btn
 							icon="mdi-close"
