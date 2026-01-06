@@ -47,13 +47,13 @@
 					</div>
 
 					<!-- 提示文字不撐高 -->
-					<v-card-text class="text-center py-1 flex-shrink-0">
+					<!-- <v-card-text class="text-center py-1 flex-shrink-0">
 						<v-chip
 							prepend-icon="mdi-information"
 							variant="text">
 							請將書籍背面的 ISBN 條碼對準對焦框
 						</v-chip>
-					</v-card-text>
+					</v-card-text> -->
 				</v-card>
 			</div>
 
