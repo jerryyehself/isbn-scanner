@@ -40,7 +40,8 @@
 							@click="stopScan" />
 					</v-toolbar>
 
-					<div class="flex-grow-1 overflow-hidden">
+					<div
+						class="flex-grow-1 overflow-hidden d-flex align-center justify-center bg-black">
 						<div
 							id="scanner"
 							class="w-100 h-100"></div>
@@ -98,12 +99,13 @@
 			},
 			{
 				fps: 10,
+				// 強制要求 1:1 或特定的寬高比有助於計算中心點
+				aspectRatio: 1.0,
 				qrbox: (vw, vh) => {
-					const width = Math.min(vw * 0.8, 320);
-					return {
-						width,
-						height: width * 0.5, // ISBN 長條
-					};
+					// 這裡的 vw, vh 是掃描容器的寬高
+					const width = Math.min(vw * 0.8, 300);
+					const height = width * 0.4; // 適合 ISBN 的長方形
+					return { width, height };
 				},
 				disableFlip: true,
 			},
@@ -127,3 +129,27 @@
 		isScanning.value = false;
 	};
 </script>
+<style scoped>
+	/* 1. 強制讓套件產生的 video 填滿容器並保持置中 */
+	#scanner :deep(video) {
+		width: 100% !important;
+		height: 100% !important;
+		object-fit: cover; /* 讓相機畫面填滿整個區域，不留黑邊 */
+	}
+
+	/* 2. 處理套件產生的中間層容器 (通常是個 div) */
+	#scanner :deep(div) {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		position: relative;
+	}
+
+	/* 3. 修正對焦框 (qrbox) 的位置 */
+	#scanner :deep(canvas) {
+		position: absolute;
+		top: 50% !important;
+		left: 50% !important;
+		transform: translate(-50%, -50%) !important;
+	}
+</style>
