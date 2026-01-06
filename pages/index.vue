@@ -48,13 +48,13 @@
 					</div>
 
 					<!-- 提示文字不撐高 -->
-					<!-- <v-card-text class="text-center py-1 flex-shrink-0">
+					<v-card-text class="text-center py-1 flex-shrink-0">
 						<v-chip
 							prepend-icon="mdi-information"
 							variant="text">
 							請將書籍背面的 ISBN 條碼對準對焦框
 						</v-chip>
-					</v-card-text> -->
+					</v-card-text>
 				</v-card>
 			</div>
 
@@ -62,7 +62,8 @@
 
 			<v-sheet
 				class="flex-grow-1 d-flex flex-column align-center justify-center bg-white pa-6">
-				<v-icon
+				<list></list>
+				<!-- <v-icon
 					size="64"
 					color="grey-lighten-2"
 					icon="mdi-book-open-variant" />
@@ -71,7 +72,7 @@
 				</div>
 				<div class="text-caption text-grey-darken-1 mt-2">
 					掃描完成後將自動顯示書籍資訊
-				</div>
+				</div> -->
 			</v-sheet>
 		</v-col>
 	</v-row>
@@ -82,6 +83,7 @@
 	import { Html5Qrcode } from 'html5-qrcode';
 	import isbn from 'isbn3';
 	import { useIsbnStore } from '~/stores/isbnStore';
+	import list from './list.vue';
 
 	const isbnStore = useIsbnStore();
 	const isScanning = ref(false);
@@ -113,8 +115,8 @@
 				const parsed = isbn.parse(decodedText);
 				if (parsed) {
 					isbnStore.addResult(parsed.isbn13);
-					stopScan();
-					navigateTo('/list');
+					// stopScan();
+					// navigateTo('/list');
 				}
 			}
 		);
