@@ -5,7 +5,6 @@
 			<div
 				style="height: 15em"
 				class="d-flex align-center justify-center flex-column ga-2">
-				<!-- 未掃描 -->
 				<v-btn
 					v-if="!isScanning"
 					variant="text"
@@ -27,12 +26,10 @@
 					</div>
 				</v-btn>
 
-				<!-- 掃描中 -->
 				<v-card
 					v-else
 					class="w-100 h-100 d-flex flex-column"
 					elevation="4">
-					<!-- 固定高度 toolbar -->
 					<v-toolbar
 						color="white"
 						density="compact"
@@ -43,7 +40,6 @@
 							@click="stopScan" />
 					</v-toolbar>
 
-					<!-- scanner 吃剩餘高度 -->
 					<div class="flex-grow-1 overflow-hidden">
 						<div
 							id="scanner"
@@ -103,7 +99,6 @@
 			{
 				fps: 10,
 				qrbox: { width: 280, height: 180 }, // ISBN 長條
-				aspectRatio: 16 / 9,
 				disableFlip: true,
 			},
 			(decodedText) => {
