@@ -8,7 +8,12 @@
 				<v-btn
 					v-if="!isScanning"
 					variant="text"
-					style="height: 50%; width: 25%; border: 2px dashed #ccc"
+					style="
+						width: 80%;
+						max-width: 420px;
+						aspect-ratio: 3.5 / 1;
+						border: 2px dashed #ccc;
+					"
 					@click="startScan">
 					<div class="d-flex flex-column align-center justify-center">
 						<v-icon
