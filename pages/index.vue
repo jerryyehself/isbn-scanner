@@ -9,9 +9,9 @@
 					v-if="!isScanning"
 					variant="text"
 					style="
-						width: 80%;
-						max-width: 420px;
-						aspect-ratio: 3.5 / 1;
+						width: 100%;
+						max-width: 360px; /* 手機安全寬度 */
+						height: 96px;
 						border: 2px dashed #ccc;
 					"
 					@click="startScan">
