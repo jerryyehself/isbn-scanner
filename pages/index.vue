@@ -116,7 +116,7 @@
 				if (parsed) {
 					isbnStore.addResult(parsed.isbn13);
 					// stopScan();
-					navigateTo('/list');
+					// navigateTo('/list');
 				}
 			}
 		);
