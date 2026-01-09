@@ -63,16 +63,17 @@
 			<v-sheet
 				class="flex-grow-1 d-flex flex-column align-center justify-center bg-white pa-6">
 				<list v-if="hasList"></list>
-				<v-icon
-					v-else
-					size="64"
-					color="grey-lighten-2"
-					icon="mdi-book-open-variant" />
-				<div class="text-h6 text-medium-emphasis mt-4 text-center">
-					請將 ISBN 條碼置於畫面中央
-				</div>
-				<div class="text-caption text-grey-darken-1 mt-2">
-					掃描完成後將自動顯示書籍資訊
+				<div v-else>
+					<v-icon
+						size="64"
+						color="grey-lighten-2"
+						icon="mdi-book-open-variant" />
+					<div class="text-h6 text-medium-emphasis mt-4 text-center">
+						請將 ISBN 條碼置於畫面中央
+					</div>
+					<div class="text-caption text-grey-darken-1 mt-2">
+						掃描完成後將自動顯示書籍資訊
+					</div>
 				</div>
 			</v-sheet>
 		</v-col>
