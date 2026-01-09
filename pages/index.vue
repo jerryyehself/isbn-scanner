@@ -62,8 +62,9 @@
 
 			<v-sheet
 				class="flex-grow-1 d-flex flex-column align-center justify-center bg-white pa-6">
-				<!-- <list></list> -->
+				<list v-if="hasList"></list>
 				<v-icon
+					v-else
 					size="64"
 					color="grey-lighten-2"
 					icon="mdi-book-open-variant" />
@@ -87,6 +88,7 @@
 
 	const isbnStore = useIsbnStore();
 	const isScanning = ref(false);
+	const hasList = isbnStore.results.length > 0;
 	let html5QrCode = null;
 
 	const startScan = async () => {
