@@ -87,6 +87,8 @@
 	import { useIsbnStore } from '~/stores/isbnStore';
 	import list from './list.vue';
 
+	let hasSeen = false;
+
 	const isbnStore = useIsbnStore();
 	const isScanning = ref(false);
 	isbnStore.addResult('9789571375673'); // for test
@@ -107,7 +109,7 @@
 			{
 				fps: 10,
 				// 強制要求 1:1 或特定的寬高比有助於計算中心點
-				aspectRatio: 1.0,
+				// aspectRatio: 1.0,
 				qrbox: (vw, vh) => {
 					// 這裡的 vw, vh 是掃描容器的寬高
 					const width = Math.min(vw * 0.8, 300);
@@ -117,12 +119,18 @@
 				disableFlip: true,
 			},
 			(decodedText) => {
+				if (!decodedText) {
+					hasSeen = false;
+					return;
+				}
+
+				if (hasSeen) return;
+
+				hasSeen = true;
+
 				const parsed = isbn.parse(decodedText);
-				alert(decodedText);
 				if (parsed) {
 					isbnStore.addResult(parsed.isbn13);
-					// stopScan();
-					// navigateTo('/list');
 				}
 			}
 		);
