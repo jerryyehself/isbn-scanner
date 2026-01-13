@@ -87,8 +87,6 @@
 	import { useIsbnStore } from '~/stores/isbnStore';
 	import list from './list.vue';
 
-	let hasSeen = false;
-
 	const isbnStore = useIsbnStore();
 	const isScanning = ref(false);
 	isbnStore.addResult('9789571375673'); // for test
@@ -119,6 +117,8 @@
 				disableFlip: true,
 			},
 			(decodedText) => {
+				let hasSeen = false;
+
 				if (!decodedText) {
 					hasSeen = false;
 					return;
