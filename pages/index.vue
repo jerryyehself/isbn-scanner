@@ -87,19 +87,12 @@
 	import { useIsbnStore } from '~/stores/isbnStore';
 	import list from './list.vue';
 
-	<<<<<<< HEAD
 	const isbnStore = useIsbnStore();
-	isbnStore.addResult('1234567891234');
 	const isScanning = ref(false);
+	isbnStore.addResult('9789571375673'); // for test
+	console.log(isbnStore.results);
+	const hasList = isbnStore.results.length > 0;
 	let html5QrCode = null;
-	=======
-		const isbnStore = useIsbnStore();
-		const isScanning = ref(false);
-		isbnStore.addResult('9789571375673'); // for test
-		console.log(isbnStore.results);
-		const hasList = isbnStore.results.length > 0;
-		let html5QrCode = null;
-	>>>>>>> db5e31c (feature: update github page action on condition)
 
 	const startScan = async () => {
 		isScanning.value = true;
