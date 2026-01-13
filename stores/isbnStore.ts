@@ -9,7 +9,6 @@ export const useIsbnStore = defineStore('isbn', {
 	actions: {
 		addResult(isbn) {
 			const isDuplicate = this.results.some((item) => item.isbn === isbn);
-
 			if (isDuplicate) {
 				console.log('此 ISBN 已存在清單中，不重複加入');
 				return; // 直接結束，不執行後續新增動作
