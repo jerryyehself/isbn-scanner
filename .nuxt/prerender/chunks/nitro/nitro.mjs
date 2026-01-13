@@ -648,7 +648,7 @@ function _expandFromEnv(value) {
 const _inlineRuntimeConfig = {
   "app": {
     "baseURL": "/isbn-scanner/",
-    "buildId": "6cc04652-df3f-46e3-911b-47acbc20a19e",
+    "buildId": "1424691f-fdcf-4f2e-8c30-797fd711e4bd",
     "buildAssetsDir": "/_nuxt/",
     "cdnURL": ""
   },
@@ -1014,9 +1014,6 @@ const _mxFcWY = eventHandler((event) => {
     ...encodingHeader.split(",").map((e) => EncodingMap[e.trim()]).filter(Boolean).sort(),
     ""
   ];
-  if (encodings.length > 1) {
-    appendResponseHeader(event, "Vary", "Accept-Encoding");
-  }
   for (const encoding of encodings) {
     for (const _id of [id + encoding, joinURL(id, "index.html" + encoding)]) {
       const _asset = getAsset(_id);
@@ -1033,6 +1030,9 @@ const _mxFcWY = eventHandler((event) => {
       throw createError({ statusCode: 404 });
     }
     return;
+  }
+  if (asset.encoding !== void 0) {
+    appendResponseHeader(event, "Vary", "Accept-Encoding");
   }
   const ifNotMatch = getRequestHeader(event, "if-none-match") === asset.etag;
   if (ifNotMatch) {

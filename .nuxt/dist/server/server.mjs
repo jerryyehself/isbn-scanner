@@ -4709,7 +4709,7 @@ function createVuetify() {
     };
   });
 }
-const version = "3.11.5";
+const version = "3.11.6";
 createVuetify.version = version;
 function inject(key) {
   const vm = this.$;
@@ -16636,7 +16636,7 @@ function useCalendarWithIntervals(props) {
     return minutes / parsedIntervalMinutes.value * parsedIntervalHeight.value;
   }
   function timeToY(time) {
-    let targetDateOrClamp = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : true;
+    let targetDateOrClamp = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : false;
     const clamp2 = targetDateOrClamp !== false;
     const targetDate = typeof targetDateOrClamp !== "boolean" ? targetDateOrClamp : void 0;
     let y = timeDelta(time, targetDate);
@@ -16645,9 +16645,14 @@ function useCalendarWithIntervals(props) {
     if (clamp2) {
       if (y < 0) {
         y = 0;
-      }
-      if (y > bodyHeight.value) {
+      } else if (y > bodyHeight.value) {
         y = bodyHeight.value;
+      }
+    } else {
+      if (y < 0) {
+        y = y + bodyHeight.value;
+      } else if (y > bodyHeight.value) {
+        y = y - bodyHeight.value;
       }
     }
     return y;
@@ -16661,9 +16666,7 @@ function useCalendarWithIntervals(props) {
     if (targetDate && typeof time === "object" && "day" in time) {
       const a = getDayIdentifier(time);
       const b = getDayIdentifier(targetDate);
-      if (a > b) {
-        minutes += (a - b) * gap;
-      }
+      minutes += (a - b) * gap;
     }
     const min = firstMinute.value;
     return (minutes - min) / gap;
@@ -20818,6 +20821,12 @@ const VColorPickerSwatches = defineComponent({
     let {
       emit
     } = _ref;
+    function onSwatchClick(hsva) {
+      if (props.disabled || !hsva) {
+        return;
+      }
+      emit("update:color", hsva);
+    }
     useRender(() => createElementVNode("div", {
       "class": normalizeClass(["v-color-picker-swatches", props.class]),
       "style": normalizeStyle([{
@@ -20830,8 +20839,10 @@ const VColorPickerSwatches = defineComponent({
       const hsva = RGBtoHSV(rgba2);
       const background = RGBtoCSS(rgba2);
       return createElementVNode("div", {
-        "class": "v-color-picker-swatches__color",
-        "onClick": () => hsva && emit("update:color", hsva)
+        "class": normalizeClass(["v-color-picker-swatches__color", {
+          "v-color-picker-swatches__color--disabled": props.disabled
+        }]),
+        "onClick": () => onSwatchClick(hsva)
       }, [createElementVNode("div", {
         "style": {
           background
