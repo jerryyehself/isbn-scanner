@@ -118,6 +118,7 @@
 			},
 			(decodedText) => {
 				const parsed = isbn.parse(decodedText);
+				alert(decodedText);
 				if (parsed) {
 					isbnStore.addResult(parsed.isbn13);
 					// stopScan();
