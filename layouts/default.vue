@@ -1,6 +1,8 @@
 <template>
 	<v-responsive class="border rounded">
-		<v-app :theme="theme">
+		<v-app
+			:theme="theme"
+			style="height: 100dvh; overflow: hidden">
 			<v-app-bar :elevation="1">
 				<template v-slot:prepend>
 					<v-app-bar-nav-icon
@@ -30,7 +32,7 @@
 			</v-navigation-drawer>
 			<v-main
 				class="d-flex flex-column overflow-hidden"
-				style="height: 100vh">
+				style="flex: 1 1 auto">
 				<v-container
 					fluid
 					class="pa-0 flex-grow-1 fill-height">
