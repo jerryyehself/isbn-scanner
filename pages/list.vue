@@ -93,6 +93,16 @@
 
 	// 2. 實例化它，這樣 template 才能讀到 isbnStore
 	const isbnStore = useIsbnStore();
+	isbnStore.addResult('9789571375673'); // for test
+	isbnStore.addResult('9789571375674'); // for test
+	isbnStore.addResult('9789571375675'); // for test
+	isbnStore.addResult('9789571375676'); // for test
+	isbnStore.addResult('9789571375677'); // for test
+	isbnStore.addResult('9789571375678'); // for test
+	isbnStore.addResult('9789571375679'); // for test
+	isbnStore.addResult('9789571375699'); // for test
+	isbnStore.addResult('9789571375689'); // for test
+	isbnStore.addResult('9789571375669'); // for test
 
 	// 這裡不需要寫任何 function，除非你想做「刪除」或「清空」功能
 	const clearAll = () => {

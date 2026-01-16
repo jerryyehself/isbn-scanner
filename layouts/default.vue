@@ -1,7 +1,5 @@
 <template>
-	<v-responsive
-		class="border rounded"
-		height="100dvh">
+	<v-responsive class="border rounded">
 		<v-app :theme="theme">
 			<v-app-bar :elevation="1">
 				<template v-slot:prepend>
@@ -24,14 +22,15 @@
 			<v-navigation-drawer
 				v-model="drawer"
 				:location="$vuetify.display.mobile ? 'bottom' : undefined"
-				temporary
-				class="overflow-hidden h-100">
+				temporary>
 				<v-list
 					:items="pages"
 					nav
 					item-props />
 			</v-navigation-drawer>
-			<v-main class="d-flex flex-column overflow-hidden h-100">
+			<v-main
+				class="d-flex flex-column overflow-hidden"
+				style="height: 100vh">
 				<v-container
 					fluid
 					class="pa-0 flex-grow-1 fill-height">
