@@ -63,7 +63,9 @@
 			<v-sheet
 				class="flex-grow-1 d-flex flex-column align-center justify-center bg-surface">
 				<list v-if="isbnStore.results.length > 0"></list>
-				<div v-else>
+				<div
+					v-else
+					class="d-flex flex-column align-center justify-center">
 					<v-icon
 						size="64"
 						color="grey-lighten-2"
