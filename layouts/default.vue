@@ -70,3 +70,18 @@
 		drawer.value = false;
 	});
 </script>
+<style>
+	/* 鎖死最外層，禁止全網頁捲動 */
+	html,
+	body {
+		overflow: hidden !important;
+		height: 100% !important;
+		width: 100% !important;
+		position: fixed; /* 這是終極手段，防止手機端意外捲動 */
+	}
+
+	#app {
+		height: 100% !important;
+		overflow: hidden !important;
+	}
+</style>
