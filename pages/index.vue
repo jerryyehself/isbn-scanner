@@ -61,8 +61,13 @@
 			<v-divider />
 
 			<v-sheet
-				class="flex-grow-1 d-flex flex-column align-center justify-center bg-surface">
-				<list v-if="isbnStore.results.length > 0"></list>
+				class="flex-grow-1 bg-surface"
+				style="position: relative; min-height: 0">
+				<div
+					v-if="isbnStore.results.length > 0"
+					class="position-absolute fill-height w-100">
+					<list></list>
+				</div>
 				<div
 					v-else
 					class="d-flex flex-column align-center justify-center">
@@ -92,6 +97,15 @@
 	const isbnStore = useIsbnStore();
 	const isScanning = ref(false);
 	isbnStore.addResult('9789571375673'); // for test
+	isbnStore.addResult('9789571375674'); // for test
+	isbnStore.addResult('9789571375675'); // for test
+	isbnStore.addResult('9789571375676'); // for test
+	isbnStore.addResult('9789571375677'); // for test
+	isbnStore.addResult('9789571375678'); // for test
+	isbnStore.addResult('9789571375679'); // for test
+	isbnStore.addResult('9789571375699'); // for test
+	isbnStore.addResult('9789571375689'); // for test
+	isbnStore.addResult('9789571375669'); // for test
 	console.log(isbnStore.results);
 	const hasList = isbnStore.results.length > 0;
 	let html5QrCode = null;
