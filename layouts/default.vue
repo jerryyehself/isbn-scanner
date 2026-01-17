@@ -63,6 +63,11 @@
 			value: 'results',
 			to: '/list',
 		},
+		{
+			title: 'Export',
+			value: 'export',
+			to: '/export',
+		},
 	];
 
 	const drawer = ref(false);
