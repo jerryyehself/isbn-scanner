@@ -1,36 +1,97 @@
-import { defineStore } from 'pinia';
+import { defineStore } from "pinia";
+interface Work {
+    id: number;
+    scanTimeSpan: string;
+    isbn: string;
+    title: string;
+    authorNames: string[];
+    publishDate?: string;
+    publisherNames?: string[];
+    coverSmall?: string;
+}
 
-export const useIsbnStore = defineStore('isbn', {
-	state: () => ({
-		// 用來存放置換結果的陣列
-		results: [],
-		nextId: 1,
-	}),
-	actions: {
-		addResult(isbn) {
-			const isDuplicate = this.results.some((item) => item.isbn === isbn);
+interface OpenLibraryEntry {
+    title: string;
+    authors?: { name: string }[];
+    publish_date?: string;
+    publishers?: { name: string }[];
+    cover?: {
+        small: string;
+        medium: string;
+        large: string;
+    };
+}
 
-			if (isDuplicate) {
-				console.log('此 ISBN 已存在清單中，不重複加入');
-				return; // 直接結束，不執行後續新增動作
-			}
-			this.results.unshift({
-				id: this.nextId++,
-				isbn: isbn,
-				time: new Date().toLocaleTimeString(),
-			});
-		},
-		deleteResult(id) {
-			this.results = this.results.filter((item) => item.id !== id);
+function extractOpenLibraryEntry(
+    data: unknown,
+    isbn: string,
+): OpenLibraryEntry {
+    if (!data || typeof data !== "object") {
+        throw new Error("OpenLibrary API 回傳格式錯誤");
+    }
 
-			this.results.forEach((item, index) => {
-				item.id = this.results.length - index;
-			});
+    const record = data as Record<string, unknown>;
+    const entry = record[`ISBN:${isbn}`];
 
-			this.nextId = this.results.length + 1;
+    if (!entry || typeof entry !== "object") {
+        throw new Error(`找不到 ISBN: ${isbn}`);
+    }
 
-			console.log('重排後的結果:', this.results);
-		},
-	},
-	// 如果想要網頁重新整理後資料還在，可以搭配 pinia-plugin-persistedstate
+    return entry as OpenLibraryEntry;
+}
+
+function mapToWork(entry: OpenLibraryEntry, isbn: string, id: number): Work {
+    return {
+        id,
+        isbn,
+        time: new Date().toLocaleTimeString(),
+
+        title: entry.title,
+        authorNames: entry.authors?.map((a) => a.name) ?? [],
+        publishDate: entry.publish_date,
+        publisherNames: entry.publishers?.map((p) => p.name),
+        coverSmall: entry.cover?.small,
+    };
+}
+
+export const useIsbnStore = defineStore("isbn", {
+    state: () => ({
+        results: [] as Work[],
+        nextId: 1,
+        loading: false,
+        error: null as string | null,
+    }),
+
+    actions: {
+        async addResultWithFetch(isbn: string) {
+            if (this.results.some((item) => item.isbn === isbn)) {
+                console.log("此 ISBN 已存在");
+                return;
+            }
+
+            this.loading = true;
+            this.error = null;
+
+            try {
+                const raw = await $fetch<unknown>(
+                    `https://openlibrary.org/api/books?bibkeys=ISBN:${isbn}&format=json&jscmd=data`,
+                );
+
+                const entry = extractOpenLibraryEntry(raw, isbn);
+                const work = mapToWork(entry, isbn, this.nextId++);
+
+                this.results.unshift(work);
+            } catch (err) {
+                console.error(err);
+                this.error = err instanceof Error ? err.message : "Fetch 失敗";
+            } finally {
+                this.loading = false;
+            }
+        },
+
+        deleteResult(id: number) {
+            this.results = this.results.filter((item) => item.id !== id);
+            this.nextId = this.results.length + 1;
+        },
+    },
 });

@@ -92,7 +92,9 @@ import { useIsbnStore } from '~/stores/isbnStore';
 import list from './list.vue';
 
 const isbnStore = useIsbnStore();
-isbnStore.addResult('1234567891234');
+isbnStore.addResultWithFetch('0789312239');
+isbnStore.addResultWithFetch('9787537815789');
+
 const isScanning = ref(false);
 let html5QrCode = null;
 
@@ -121,7 +123,7 @@ const startScan = async () => {
 		(decodedText) => {
 			const parsed = isbn.parse(decodedText);
 			if (parsed) {
-				isbnStore.addResult(parsed.isbn13);
+				isbnStore.addResultWithFetch(parsed.isbn13);
 				// stopScan();
 				// navigateTo('/list');
 			}
