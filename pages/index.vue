@@ -81,47 +81,48 @@
 </template>
 
 <script setup>
-import { ref, nextTick } from 'vue';
-import { Html5Qrcode } from 'html5-qrcode';
-import isbn from 'isbn3';
-import { useIsbnStore } from '~/stores/isbnStore';
-import list from './list.vue';
+	import { ref, nextTick } from 'vue';
+	import { Html5Qrcode } from 'html5-qrcode';
+	import isbn from 'isbn3';
+	import { useIsbnStore } from '~/stores/isbnStore';
+	import list from './list.vue';
 
-const isbnStore = useIsbnStore();
-isbnStore.addResultWithFetch('0789312239');
-isbnStore.addResultWithFetch('9787537815789');
+	const isbnStore = useIsbnStore();
+	isbnStore.addResultWithFetch('0789312239');
+	isbnStore.addResultWithFetch('9787537815789');
 
-const isScanning = ref(false);
-let html5QrCode = null;
+	const isScanning = ref(false);
+	let html5QrCode = null;
 
-const startScan = async () => {
-	isScanning.value = true;
-	await nextTick();
+	const startScan = async () => {
+		isScanning.value = true;
+		await nextTick();
 
-	html5QrCode = new Html5Qrcode('scanner');
+		html5QrCode = new Html5Qrcode('scanner');
 
-	await html5QrCode.start(
-		{
-			facingMode: 'environment', // 後鏡頭
-		},
-		{
-			fps: 10,
-			// 強制要求 1:1 或特定的寬高比有助於計算中心點
-			aspectRatio: 1.0,
-			qrbox: (vw, vh) => {
-				// 這裡的 vw, vh 是掃描容器的寬高
-				const width = Math.min(vw * 0.8, 300);
-				const height = width * 0.4; // 適合 ISBN 的長方形
-				return { width, height };
+		await html5QrCode.start(
+			{
+				facingMode: 'environment', // 後鏡頭
 			},
-			disableFlip: true,
-		},
-		(decodedText) => {
-			const parsed = isbn.parse(decodedText);
-			if (parsed) {
-				isbnStore.addResultWithFetch(parsed.isbn13);
-				// stopScan();
-				// navigateTo('/list');
+			{
+				fps: 10,
+				// 強制要求 1:1 或特定的寬高比有助於計算中心點
+				aspectRatio: 1.0,
+				qrbox: (vw, vh) => {
+					// 這裡的 vw, vh 是掃描容器的寬高
+					const width = Math.min(vw * 0.8, 300);
+					const height = width * 0.4; // 適合 ISBN 的長方形
+					return { width, height };
+				},
+				disableFlip: true,
+			},
+			(decodedText) => {
+				const parsed = isbn.parse(decodedText);
+				if (parsed) {
+					isbnStore.addResultWithFetch(parsed.isbn13);
+					// stopScan();
+					// navigateTo('/list');
+				}
 			}
 		);
 	};
