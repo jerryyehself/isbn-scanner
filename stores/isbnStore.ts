@@ -1,25 +1,38 @@
 import { defineStore } from "pinia";
-interface Work {
+interface CollectionItem {
     id: number;
     scanTimeSpan: string;
     isbn: string;
     title: string;
-    authorNames: string[];
+    authors: string[];
     publishDate?: string;
-    publisherNames?: string[];
+    publishPlace?: string[];
+    publisher?: string;
     coverSmall?: string;
+    pages?: string;
+    subjects?: {
+        common: string[];
+        place: string[];
+        time: string[];
+        people: string[];
+    };
 }
-
 interface OpenLibraryEntry {
     title: string;
     authors?: { name: string }[];
     publish_date?: string;
     publishers?: { name: string }[];
+    publish_places?: { name: string }[];
+    number_of_pages?: number;
     cover?: {
         small: string;
         medium: string;
         large: string;
     };
+    subjects?: { name: string; url: string }[];
+    subject_places?: { name: string; url: string }[];
+    subject_times?: { name: string; url: string }[];
+    subject_people?: { name: string; url: string }[];
 }
 
 function extractOpenLibraryEntry(
@@ -40,23 +53,36 @@ function extractOpenLibraryEntry(
     return entry as OpenLibraryEntry;
 }
 
-function mapToWork(entry: OpenLibraryEntry, isbn: string, id: number): Work {
+function mapToCollectionItem(
+    entry: OpenLibraryEntry,
+    isbn: string,
+    id: number,
+): CollectionItem {
     return {
         id,
         isbn,
-        time: new Date().toLocaleTimeString(),
-
+        scanTimeSpan: new Date().toLocaleTimeString(),
         title: entry.title,
-        authorNames: entry.authors?.map((a) => a.name) ?? [],
+        authors: entry.authors?.map((a) => a.name) ?? [],
         publishDate: entry.publish_date,
-        publisherNames: entry.publishers?.map((p) => p.name),
+        publishPlace: entry.publish_places?.map((p) => p.name),
+        publisher: entry.publishers?.map((p) => p.name).join(", "),
+        pages: entry.number_of_pages
+            ? entry.number_of_pages.toString()
+            : undefined,
+        subjects: {
+            common: entry.subjects?.map((s) => s.name) ?? [],
+            place: entry.subject_places?.map((s) => s.name) ?? [],
+            time: entry.subject_times?.map((s) => s.name) ?? [],
+            people: entry.subject_people?.map((s) => s.name) ?? [],
+        },
         coverSmall: entry.cover?.small,
     };
 }
 
 export const useIsbnStore = defineStore("isbn", {
     state: () => ({
-        results: [] as Work[],
+        results: [] as CollectionItem[],
         nextId: 1,
         loading: false,
         error: null as string | null,
@@ -78,9 +104,13 @@ export const useIsbnStore = defineStore("isbn", {
                 );
 
                 const entry = extractOpenLibraryEntry(raw, isbn);
-                const work = mapToWork(entry, isbn, this.nextId++);
+                const collectionItem = mapToCollectionItem(
+                    entry,
+                    isbn,
+                    this.nextId++,
+                );
 
-                this.results.unshift(work);
+                this.results.unshift(collectionItem);
             } catch (err) {
                 console.error(err);
                 this.error = err instanceof Error ? err.message : "Fetch 失敗";
