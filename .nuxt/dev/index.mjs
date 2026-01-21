@@ -1454,16 +1454,28 @@ _BY8dPEkR5g1ZxTZ1NvdG3rQKLKQ9506hLgNwflsz4s
 const assets = {
   "/index.mjs": {
     "type": "text/javascript; charset=utf-8",
+<<<<<<< HEAD
     "etag": "\"147bd-nFYqTWaYSv9tdd1qQR1PCgsYL7w\"",
     "mtime": "2026-01-21T06:09:15.444Z",
     "size": 83901,
+=======
+    "etag": "\"1457a-ZBBQ9GxhglqD8sHq04RY2sUVZCw\"",
+    "mtime": "2026-01-21T00:29:28.643Z",
+    "size": 83322,
+>>>>>>> bugfix/master
     "path": "index.mjs"
   },
   "/index.mjs.map": {
     "type": "application/json",
+<<<<<<< HEAD
     "etag": "\"50125-BUKnsgYWmag9CmOzJ3qA3GmVw4A\"",
     "mtime": "2026-01-21T06:09:15.444Z",
     "size": 327973,
+=======
+    "etag": "\"4fff7-86kzV0AJ1wSGN08o9ZSsFTKSu+s\"",
+    "mtime": "2026-01-21T00:29:28.643Z",
+    "size": 327671,
+>>>>>>> bugfix/master
     "path": "index.mjs.map"
   }
 };
