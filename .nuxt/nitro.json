@@ -1,9 +1,5 @@
 {
-<<<<<<< HEAD
-  "date": "2026-01-21T06:09:23.962Z",
-=======
-  "date": "2026-01-21T00:49:47.018Z",
->>>>>>> bugfix/master
+  "date": "2026-01-21T06:26:26.873Z",
   "preset": "nitro-dev",
   "framework": {
     "name": "nuxt",
@@ -13,13 +9,9 @@
     "nitro": "2.13.0"
   },
   "dev": {
-    "pid": 14960,
+    "pid": 9240,
     "workerAddress": {
-<<<<<<< HEAD
-      "socketPath": "\\\\.\\pipe\\nitro-worker-14960-3-3-2930.sock"
-=======
-      "socketPath": "\\\\.\\pipe\\nitro-worker-14960-2-2-5435.sock"
->>>>>>> bugfix/master
+      "socketPath": "\\\\.\\pipe\\nitro-worker-9240-3-3-449.sock"
     }
   }
 }

@@ -625,7 +625,7 @@ function _expandFromEnv(value) {
 
 const _inlineRuntimeConfig = {
   "app": {
-    "baseURL": "/",
+    "baseURL": "/isbn-scanner/",
     "buildId": "dev",
     "buildAssetsDir": "/_nuxt/",
     "cdnURL": ""
@@ -1224,7 +1224,7 @@ async function defaultHandler(error, event, opts) {
   const statusMessage = error.statusMessage || "Server Error";
   const url = getRequestURL(event, { xForwardedHost: true, xForwardedProto: true });
   if (statusCode === 404) {
-    const baseURL = "/";
+    const baseURL = "/isbn-scanner/";
     if (/^\/[^/]/.test(baseURL) && !url.pathname.startsWith(baseURL)) {
       const redirectTo = `${baseURL}${url.pathname.slice(1)}${url.search}`;
       return {
@@ -1454,28 +1454,16 @@ _BY8dPEkR5g1ZxTZ1NvdG3rQKLKQ9506hLgNwflsz4s
 const assets = {
   "/index.mjs": {
     "type": "text/javascript; charset=utf-8",
-<<<<<<< HEAD
-    "etag": "\"147bd-nFYqTWaYSv9tdd1qQR1PCgsYL7w\"",
-    "mtime": "2026-01-21T06:09:15.444Z",
-    "size": 83901,
-=======
-    "etag": "\"1457a-ZBBQ9GxhglqD8sHq04RY2sUVZCw\"",
-    "mtime": "2026-01-21T00:29:28.643Z",
-    "size": 83322,
->>>>>>> bugfix/master
+    "etag": "\"14578-7yW8RXm6ldvJv7jkNNz8r1omcvA\"",
+    "mtime": "2026-01-21T06:26:24.020Z",
+    "size": 83320,
     "path": "index.mjs"
   },
   "/index.mjs.map": {
     "type": "application/json",
-<<<<<<< HEAD
-    "etag": "\"50125-BUKnsgYWmag9CmOzJ3qA3GmVw4A\"",
-    "mtime": "2026-01-21T06:09:15.444Z",
-    "size": 327973,
-=======
-    "etag": "\"4fff7-86kzV0AJ1wSGN08o9ZSsFTKSu+s\"",
-    "mtime": "2026-01-21T00:29:28.643Z",
-    "size": 327671,
->>>>>>> bugfix/master
+    "etag": "\"4fff2-0/uD40CfzU7mtHGId7D9TaWS8+Y\"",
+    "mtime": "2026-01-21T06:26:24.020Z",
+    "size": 327666,
     "path": "index.mjs.map"
   }
 };
