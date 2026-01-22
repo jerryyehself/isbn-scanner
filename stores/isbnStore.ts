@@ -8,7 +8,11 @@ interface CollectionItem {
     publishDate?: string;
     publishPlace?: string[];
     publisher?: string;
-    coverSmall?: string;
+    covers?: {
+        small?: string;
+        medium?: string;
+        large?: string;
+    };
     pages?: string;
     subjects?: {
         common: string[];
@@ -76,7 +80,11 @@ function mapToCollectionItem(
             time: entry.subject_times?.map((s) => s.name) ?? [],
             people: entry.subject_people?.map((s) => s.name) ?? [],
         },
-        coverSmall: entry.cover?.small,
+        covers: {
+            small: entry.cover?.small,
+            medium: entry.cover?.medium,
+            large: entry.cover?.large,
+        },
     };
 }
 
