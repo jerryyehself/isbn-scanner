@@ -1,10 +1,10 @@
 <template>
-	<v-row
-		class="fill-height ma-0 align-center justify-center bg-grey-lighten-3">
+	<v-row class="fill-height ma-0 align-center justify-center bg-grey-lighten-3">
 		<v-col class="pa-0 h-100 d-flex flex-column overflow-hidden">
 			<div
 				style="height: 15em"
-				class="d-flex align-center justify-center flex-column ga-2">
+				class="d-flex align-center justify-center flex-column ga-2"
+			>
 				<v-btn
 					v-if="!isScanning"
 					variant="text"
@@ -14,44 +14,48 @@
 						height: 96px;
 						border: 2px dashed #ccc;
 					"
-					@click="startScan">
+					@click="startScan"
+				>
 					<div class="d-flex flex-column align-center justify-center">
 						<v-icon
 							size="64"
 							color="primary"
-							icon="mdi-barcode-scan" />
-						<span class="text-h6 font-medium"
-							>點擊開始掃描 ISBN</span
-						>
+							icon="mdi-barcode-scan"
+						/>
+						<span class="text-h6 font-medium">點擊開始掃描 ISBN</span>
 					</div>
 				</v-btn>
 
 				<v-card
 					v-else
 					class="w-100 h-100 d-flex flex-column"
-					elevation="4">
+					elevation="4"
+				>
 					<v-toolbar
 						color="white"
 						density="compact"
-						style="height: 48px; flex-shrink: 0">
+						style="height: 48px; flex-shrink: 0"
+					>
 						<v-spacer />
 						<v-btn
 							icon="mdi-close"
-							@click="stopScan" />
+							@click="stopScan"
+						/>
 					</v-toolbar>
 
-					<div
-						class="flex-grow-1 overflow-hidden d-flex align-center justify-center bg-black">
+					<div class="flex-grow-1 overflow-hidden d-flex align-center justify-center bg-black">
 						<div
 							id="scanner"
-							class="w-100 h-100"></div>
+							class="w-100 h-100"
+						></div>
 					</div>
 
 					<!-- 提示文字不撐高 -->
 					<v-card-text class="text-center py-1 flex-shrink-0">
 						<v-chip
 							prepend-icon="mdi-information"
-							variant="text">
+							variant="text"
+						>
 							請將書籍背面的 ISBN 條碼對準對焦框
 						</v-chip>
 					</v-card-text>
@@ -60,14 +64,14 @@
 
 			<v-divider />
 
-			<v-sheet
-				class="flex-grow-1 d-flex flex-column align-center justify-center bg-surface">
+			<v-sheet class="flex-grow-1 d-flex flex-column align-center justify-center bg-surface">
 				<list v-if="isbnStore.results.length > 0"></list>
 				<div v-else>
 					<v-icon
 						size="64"
 						color="grey-lighten-2"
-						icon="mdi-book-open-variant" />
+						icon="mdi-book-open-variant"
+					/>
 					<div class="text-h6 text-medium-emphasis mt-4 text-center">
 						請將 ISBN 條碼置於畫面中央
 					</div>
@@ -123,40 +127,41 @@ const startScan = async () => {
 				// stopScan();
 				// navigateTo('/list');
 			}
-		);
-	};
-
-	const stopScan = async () => {
-		if (html5QrCode) {
-			await html5QrCode.stop();
-			await html5QrCode.clear();
-			html5QrCode = null;
 		}
-		isScanning.value = false;
-	};
+	);
+};
+
+const stopScan = async () => {
+	if (html5QrCode) {
+		await html5QrCode.stop();
+		await html5QrCode.clear();
+		html5QrCode = null;
+	}
+	isScanning.value = false;
+};
 </script>
 <style scoped>
-	/* 1. 強制讓套件產生的 video 填滿容器並保持置中 */
-	#scanner :deep(video) {
-		width: 100% !important;
-		height: 100% !important;
-		object-fit: cover;
-		/* 讓相機畫面填滿整個區域，不留黑邊 */
-	}
+/* 1. 強制讓套件產生的 video 填滿容器並保持置中 */
+#scanner :deep(video) {
+	width: 100% !important;
+	height: 100% !important;
+	object-fit: cover;
+	/* 讓相機畫面填滿整個區域，不留黑邊 */
+}
 
-	/* 2. 處理套件產生的中間層容器 (通常是個 div) */
-	#scanner :deep(div) {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		position: relative;
-	}
+/* 2. 處理套件產生的中間層容器 (通常是個 div) */
+#scanner :deep(div) {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	position: relative;
+}
 
-	/* 3. 修正對焦框 (qrbox) 的位置 */
-	#scanner :deep(canvas) {
-		position: absolute;
-		top: 50% !important;
-		left: 50% !important;
-		transform: translate(-50%, -50%) !important;
-	}
+/* 3. 修正對焦框 (qrbox) 的位置 */
+#scanner :deep(canvas) {
+	position: absolute;
+	top: 50% !important;
+	left: 50% !important;
+	transform: translate(-50%, -50%) !important;
+}
 </style>
