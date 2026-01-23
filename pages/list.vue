@@ -1,22 +1,6 @@
 <template>
-	<v-container class="h-100 d-flex flex-column">
-		<v-card
-			v-for="result in isbnStore.results"
-			:key="result.isbn"
-			variant="flat"
-			class="mb-4 overflow-hidden"
-			color="surface-variant"
-			max-width="200"
-			:title="result.title"
-			:subtitle="result.isbn"
-		>
-			<v-img
-				:src="result.covers?.medium || result.covers?.small"
-				aspect-ratio="0.7"
-				cover
-			/>
-		</v-card>
-		<!-- <v-toolbar
+	<v-container class="h-100">
+		<v-toolbar
 			color="transparent"
 			class="mb-4"
 		>
@@ -26,8 +10,63 @@
 					共 {{ isbnStore.results.length }} 筆
 				</v-list-item-subtitle>
 			</v-toolbar-title>
+			<!-- <v-spacer></v-spacer> -->
+			<v-btn-toggle
+				v-model="viewMode"
+				mandatory
+				border
+				divided
+			>
+				<v-btn value="list">
+					<v-icon>mdi-view-list</v-icon>
+					<v-tooltip
+						activator="parent"
+						location="bottom"
+					>
+						條列檢視
+					</v-tooltip>
+				</v-btn>
+				<v-btn value="grid">
+					<v-icon>mdi-view-grid</v-icon>
+					<v-tooltip
+						activator="parent"
+						location="bottom"
+					>
+						網格檢視
+					</v-tooltip>
+				</v-btn>
+			</v-btn-toggle>
 		</v-toolbar>
-		<div class="h-100 mb-4">
+		<div
+			v-if="viewMode == 'grid'"
+			class="mb-4 overflow-hidden"
+		>
+			<v-row dense>
+				<v-col
+					cols="3"
+					v-for="result in isbnStore.results"
+					:key="result.isbn"
+				>
+					<v-card
+						variant="flat"
+						class="mb-4 overflow-hidden"
+						color="surface-variant"
+						:title="result.title"
+						:subtitle="result.isbn"
+					>
+						<v-img
+							:src="result.covers?.medium || result.covers?.small"
+							aspect-ratio="0.7"
+							cover
+						/>
+					</v-card>
+				</v-col>
+			</v-row>
+		</div>
+		<div
+			class="d-flex flex-column gap-4 mb-4"
+			v-else
+		>
 			<v-list
 				lines="two"
 				border
@@ -54,7 +93,7 @@
 									{{ item.time }}
 								</ClientOnly>
 							</template>
-<template v-slot:prepend>
+							<template v-slot:prepend>
 								<v-avatar
 									rounded="lg"
 									size="50"
@@ -68,13 +107,13 @@
 								</v-avatar>
 
 							</template>
-<v-list-item-content>
-	{{ item.title }}, {{ item.authors.join(', ') }},
-	{{ item.publisher }}, {{ item.publishDate }},{{
-	item.pages
-	}}
-</v-list-item-content>
-<template v-slot:append>
+							<v-list-item-content>
+								{{ item.title }}, {{ item.authors.join(', ') }},
+								{{ item.publisher }}, {{ item.publishDate }},{{
+									item.pages
+								}}
+							</v-list-item-content>
+							<template v-slot:append>
 								<v-btn
 									icon="mdi-delete"
 									variant="text"
@@ -84,22 +123,40 @@
 										"
 								></v-btn>
 							</template>
-</v-list-item>
+						</v-list-item>
 
-<v-divider v-if="index < isbnStore.results.length - 1" class="border-opacity-25"></v-divider>
-</template>
-</template>
-</v-list>
-</div>
-<v-dialog v-model="zoomDialog" max-width="400" class="rounded-lg">
-	<v-card>
-		<v-toolbar color="transparent" density="compact">
-			<v-toolbar-title class="text-subtitle-1">書封</v-toolbar-title>
-			<v-spacer></v-spacer>
-			<v-btn icon="mdi-close" @click="zoomDialog = false"></v-btn>
-		</v-toolbar>
-		<v-img :src="selectedImg" width="100%" min-height="300" cover>
-			<template v-slot:placeholder>
+						<v-divider
+							v-if="index < isbnStore.results.length - 1"
+							class="border-opacity-25"
+						></v-divider>
+					</template>
+				</template>
+			</v-list>
+		</div>
+		<v-dialog
+			v-model="zoomDialog"
+			max-width="400"
+			class="rounded-lg"
+		>
+			<v-card>
+				<v-toolbar
+					color="transparent"
+					density="compact"
+				>
+					<v-toolbar-title class="text-subtitle-1">書封</v-toolbar-title>
+					<v-spacer></v-spacer>
+					<v-btn
+						icon="mdi-close"
+						@click="zoomDialog = false"
+					></v-btn>
+				</v-toolbar>
+				<v-img
+					:src="selectedImg"
+					width="100%"
+					min-height="300"
+					cover
+				>
+					<template v-slot:placeholder>
 						<div class="fill-height bg-grey-lighten-4">
 							<v-progress-linear
 								color="grey-lighten-1"
@@ -107,19 +164,29 @@
 							/>
 						</div>
 					</template>
-		</v-img>
-	</v-card>
-</v-dialog>
-<div class="d-flex ga-5 justify-center">
-	<v-btn color="success" variant="tonal" prepend-icon="mdi-export" @click=""
-		:disabled="isbnStore.results.length === 0">
-		匯出
-	</v-btn>
-	<v-btn color="error" variant="tonal" prepend-icon="mdi-delete-sweep" @click="clearAll"
-		:disabled="isbnStore.results.length === 0">
-		清空
-	</v-btn>
-</div> -->
+				</v-img>
+			</v-card>
+		</v-dialog>
+		<div class="d-flex ga-5 justify-center">
+			<v-btn
+				color="success"
+				variant="tonal"
+				prepend-icon="mdi-export"
+				@click=""
+				:disabled="isbnStore.results.length === 0"
+			>
+				匯出
+			</v-btn>
+			<v-btn
+				color="error"
+				variant="tonal"
+				prepend-icon="mdi-delete-sweep"
+				@click="clearAll"
+				:disabled="isbnStore.results.length === 0"
+			>
+				清空
+			</v-btn>
+		</div>
 	</v-container>
 </template>
 
@@ -127,10 +194,12 @@
 // 1. 引入剛剛定義的倉庫
 import { useIsbnStore } from '~/stores/isbnStore';
 
+
 // 2. 實例化它，這樣 template 才能讀到 isbnStore
 const isbnStore = useIsbnStore();
 const zoomDialog = ref(false);
 const selectedImg = ref('');
+const viewMode = ref('list');
 
 // 這裡不需要寫任何 function，除非你想做「刪除」或「清空」功能
 const clearAll = () => {
