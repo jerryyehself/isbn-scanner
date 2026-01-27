@@ -64,7 +64,7 @@
 
 			<v-divider />
 
-			<v-sheet class="flex-grow-1 d-flex flex-column align-center justify-center bg-surface">
+			<v-sheet class="flex-grow-1 d-flex flex-column align-center justify-center bg-surface overflow-hidden ">
 				<list v-if="isbnStore.results.length > 0"></list>
 				<div v-else>
 					<v-icon
