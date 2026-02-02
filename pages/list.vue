@@ -16,7 +16,8 @@
 				:disabled="isbnStore.results.length === 0"
 				variant="tonal"
 				class="me-2"
-				height="40">
+				height="40"
+				@click="exportDialog = true">
 				<v-icon size="22">mdi-export</v-icon>
 				<v-tooltip
 					activator="parent"
@@ -24,7 +25,7 @@
 					匯出資料
 				</v-tooltip>
 			</v-btn>
-
+			<ExportDialog v-model="exportDialog" />
 			<v-btn
 				color="error"
 				variant="tonal"
@@ -39,7 +40,62 @@
 					全部刪除
 				</v-tooltip>
 			</v-btn>
+			<!-- <template v-slot:default>
+				<v-form
+					ref="exportForm"
+					@submit.prevent="submitExport">
+					<v-card title="請選擇匯出方式">
+						<v-divider></v-divider>
+						<v-card-text class="px-4">
+							<v-radio-group
+								v-model="dialog"
+								:rules="exportRule">
+								<div
+									v-for="item in exportList"
+									:key="item.value"
+									class="mb-2">
+									<v-radio
+										:label="item.title"
+										:value="item.value" />
 
+									<v-expand-transition
+										v-if="
+											dialog === item.value &&
+											item.value !== 'local'
+										"
+										class="ml-6 mt-2">
+										<v-text-field
+											density="compact"
+											:rules="item.rules"
+											v-model="
+												exportStore.results[
+													item.value === 'email'
+														? 'email'
+														: 'googleSheetKey'
+												]
+											"
+											:label="`請輸入 ${item.sub}`" />
+									</v-expand-transition>
+								</div>
+							</v-radio-group>
+						</v-card-text>
+						<v-divider></v-divider>
+						<v-card-actions>
+							<v-btn
+								text="關閉"
+								@click="exportDialog = false"></v-btn>
+
+							<v-spacer></v-spacer>
+
+							<v-btn
+								color="surface-variant"
+								text="確認"
+								variant="flat"
+								type="submit"></v-btn>
+						</v-card-actions>
+					</v-card>
+				</v-form>
+			</template> -->
 			<v-btn-toggle
 				v-model="viewMode"
 				mandatory
@@ -242,6 +298,8 @@
 <script setup>
 	// 1. 引入剛剛定義的倉庫
 	import { useIsbnStore } from '~/stores/isbnStore';
+	import { useExportStore } from '~/stores/exportStore';
+	import ExportDialog from '@/components/ExportDialog.vue';
 
 	// 2. 實例化它，這樣 template 才能讀到 isbnStore
 	const isbnStore = useIsbnStore();
@@ -261,4 +319,49 @@
 		selectedImg.value = imgUrl;
 		zoomDialog.value = true;
 	};
+
+	const exportStore = useExportStore();
+	const dialog = ref(null);
+	const exportDialog = ref(false);
+	const exportRule = [(v) => !!v || '請選擇匯出方式'];
+	const isActive = ref(false);
+	const pathRules = [
+		(v) => !!v || '請輸入金鑰',
+		(v) => v?.length >= 3 || '路徑至少 3 個字',
+	];
+
+	const emailRules = [
+		(v) => !!v || '請輸入 email 地址',
+		(v) => /^https?:\/\//.test(v) || 'email格式錯誤',
+	];
+	const exportForm = ref(null);
+	const submitExport = async () => {
+		const { valid } = await exportForm.value.validate();
+		if (!valid) return;
+
+		exportDialog.value = false; // ✅ 真正關掉 dialog
+	};
+
+	const exportList = [
+		{
+			value: 'local',
+			title: '本地端',
+			sub: '',
+			disabled: false,
+		},
+		{
+			value: 'email',
+			title: 'Email',
+			sub: 'Email地址',
+			disabled: exportStore.results.email === '',
+			rules: emailRules,
+		},
+		{
+			value: 'googleSheets',
+			title: 'Google Sheets',
+			sub: 'Google Sheets金鑰',
+			disabled: exportStore.results.googleSheetKey === '',
+			rules: pathRules,
+		},
+	];
 </script>
