@@ -33,10 +33,10 @@
 					/>
 				</v-navigation-drawer>
 			</client-only>
-			<v-main class="d-flex flex-column overflow-hidden">
+			<v-main class="d-flex flex-column h-100">
 				<v-container
 					fluid
-					class="pa-0 flex-grow-1 fill-height"
+					class="overflow-hidden pa-0 flex-grow-1"
 				>
 					<NuxtPage />
 				</v-container>
