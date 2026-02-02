@@ -1,1 +1,0 @@
-export { default } from "file:///Users/jerryyeh/isbn-scanner/node_modules/@nuxt/vite-builder/dist/runtime/client.manifest.mjs"
