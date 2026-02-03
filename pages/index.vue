@@ -64,8 +64,39 @@
 				class="flex-grow-1 d-flex flex-column align-center justify-center bg-surface overflow-hidden">
 				<div
 					v-if="isbnStore.results[0]"
-					class="w-75 h-75 overflow-y-auto">
+					class="w-75 h-75 overflow-y-auto d-flex flex-column align-center">
 					<scan-preview></scan-preview>
+					<v-item-group class="pa-5 d-flex justify-center w-75">
+						<v-row
+							dense
+							class="w-100"
+							style="gap: 8px">
+							<v-col
+								v-for="(action, index) in bookActions"
+								:key="index"
+								class="d-flex"
+								cols>
+								<v-item
+									v-slot="{
+										isSelected,
+										selectedClass,
+										toggle,
+									}">
+									<v-card
+										:class="[
+											'd-flex align-center justify-center',
+											selectedClass,
+										]"
+										height="40"
+										dark
+										@click="toggle"
+										class="w-100">
+										{{ action.title }}
+									</v-card>
+								</v-item>
+							</v-col>
+						</v-row>
+					</v-item-group>
 				</div>
 				<div v-else>
 					<v-icon
@@ -91,6 +122,12 @@
 	import { useIsbnStore } from '~/stores/isbnStore';
 	import ScanPreview from '~/components/ScanPreview.vue';
 	import list from './list.vue';
+
+	const bookActions = [
+		{ title: '默認加入', icon: 'mdi-information' },
+		{ title: '加入', icon: 'mdi-book-plus' },
+		{ title: '刪除', icon: 'mdi-export' },
+	];
 
 	const isbnStore = useIsbnStore();
 	isbnStore.addResultWithFetch('0789312239');
