@@ -97,6 +97,7 @@
 										:disabled="action.disabled"
 										:active="action.active"
 										:color="action.color"
+										:prepend-icon="action.prependIcon"
 										variant="tonal" />
 								</v-item>
 							</v-col>
@@ -106,6 +107,11 @@
 			</v-sheet>
 		</v-col>
 	</v-row>
+	<v-snackbar
+		:timeout="2000"
+		color="success"
+		:text="message"
+		v-model="message" />
 </template>
 
 <script setup>
@@ -116,6 +122,7 @@
 	import ScanPreview from '~/components/ScanPreview.vue';
 
 	const addDefault = ref(false);
+	const message = ref(null);
 
 	const isbnStore = useIsbnStore();
 	isbnStore.fetchBookInfo('0789312239');
@@ -134,6 +141,9 @@
 				}
 			},
 			active: addDefault.value,
+			prependIcon: addDefault.value
+				? 'mdi-check-circle-outline'
+				: 'mdi-circle-outline',
 		},
 		{
 			title: '加入',
@@ -142,6 +152,7 @@
 			color: 'success',
 			toggle: () => {
 				isbnStore.addResultToCollection();
+				message.value = '已加入清單';
 			},
 			active: false,
 		},
@@ -150,7 +161,9 @@
 			icon: 'mdi-export',
 			disabled: addDefault.value || !isbnStore.current,
 			color: 'error',
-			toggle: () => {},
+			toggle: () => {
+				isbnStore.current = null;
+			},
 			active: false,
 		},
 	]);
