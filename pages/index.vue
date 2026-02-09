@@ -96,19 +96,11 @@
 								class="d-flex"
 								cols
 							>
-								<v-item v-slot="{
-									isSelected,
-									selectedClass,
-									toggle,
-								}">
+								<v-item>
 									<v-btn
-										:class="[
-											'd-flex align-center justify-center',
-											selectedClass,
-										]"
+										class='d-flex align-center justify-center w-100'
 										height="40"
 										@click="action.toggle"
-										class="w-100"
 										:text="action.title"
 										:disabled="action.disabled"
 										:active="action.active"
