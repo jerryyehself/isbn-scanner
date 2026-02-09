@@ -2,7 +2,7 @@
 	<v-card
 		border
 		rounded-lg
-		class="w-100 mb-4 d-flex h-50"
+		class="w-100 mb-4 d-flex h-100"
 		elevation="1"
 	>
 		<v-img
@@ -95,11 +95,13 @@
 					size="x-small"
 					variant="outlined"
 					color="primary"
-				>繁體中文</v-chip>
+					text="繁體中文"
+				/>
 				<v-chip
 					size="x-small"
 					variant="outlined"
-				>精裝本</v-chip>
+					text="精裝本"
+				/>
 			</div>
 		</div>
 	</v-card>
@@ -109,7 +111,7 @@
 import { useIsbnStore } from '~/stores/isbnStore';
 
 const isbnStore = useIsbnStore();
-const book = isbnStore.results[0]; // 假設只顯示第一本
+const book = isbnStore.current; // 假設只顯示第一本
 
 // Emits if you want actions
 const emit = defineEmits(['delete', 'zoom']);

@@ -94,10 +94,11 @@ export const useIsbnStore = defineStore("isbn", {
         nextId: 1,
         loading: false,
         error: null as string | null,
+        current: null as CollectionItem | null,
     }),
 
     actions: {
-        async addResultWithFetch(isbn: string) {
+        async fetchBookInfo(isbn: string) {
             if (this.results.some((item) => item.isbn === isbn)) {
                 console.log("此 ISBN 已存在");
                 return;
@@ -118,7 +119,7 @@ export const useIsbnStore = defineStore("isbn", {
                     this.nextId++,
                 );
 
-                this.results.unshift(collectionItem);
+                this.current = collectionItem;
             } catch (err) {
                 console.error(err);
                 this.error = err instanceof Error ? err.message : "Fetch 失敗";
@@ -126,7 +127,12 @@ export const useIsbnStore = defineStore("isbn", {
                 this.loading = false;
             }
         },
+        addResultToCollection() {
+            if (!this.current) return;
 
+            this.results.unshift(this.current);
+            this.current = null;
+        },
         deleteResult(id: number) {
             this.results = this.results.filter((item) => item.id !== id);
             this.nextId = this.results.length + 1;

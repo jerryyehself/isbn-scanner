@@ -66,15 +66,30 @@
 
 			<v-sheet class="flex-grow-1 d-flex flex-column align-center justify-center bg-surface overflow-hidden">
 				<div
-					v-if="isbnStore.results[0]"
-					class="w-75 h-75 overflow-y-auto d-flex flex-column justify-space-around align-center"
+					v-if="isbnStore.current"
+					class="w-75 h-50 overflow-y-auto d-flex flex-column justify-space-around align-center"
 				>
 					<scan-preview />
-					<v-item-group class="pa-5 d-flex justify-center w-75">
-						<v-row
-							dense
-							class="w-100 ga-6"
-						>
+				</div>
+				<div
+					class="w-75 h-50 overflow-y-auto d-flex flex-column align-center justify-center"
+					v-else
+				>
+					<v-icon
+						size="64"
+						color="grey-lighten-2"
+						icon="mdi-book-open-variant"
+					/>
+					<div class="text-h6 text-medium-emphasis mt-4 text-center">
+						請將 ISBN 條碼置於畫面中央
+					</div>
+					<div class="text-caption text-grey-darken-1 mt-2">
+						掃描完成後將自動顯示書籍資訊
+					</div>
+				</div>
+				<div class="w-75">
+					<v-item-group class="pa-5 d-flex justify-center">
+						<v-row class="w-100 ga-6">
 							<v-col
 								v-for="action in bookActions"
 								:key="action.title"
@@ -105,19 +120,6 @@
 						</v-row>
 					</v-item-group>
 				</div>
-				<div v-else>
-					<v-icon
-						size="64"
-						color="grey-lighten-2"
-						icon="mdi-book-open-variant"
-					/>
-					<div class="text-h6 text-medium-emphasis mt-4 text-center">
-						請將 ISBN 條碼置於畫面中央
-					</div>
-					<div class="text-caption text-grey-darken-1 mt-2">
-						掃描完成後將自動顯示書籍資訊
-					</div>
-				</div>
 			</v-sheet>
 		</v-col>
 	</v-row>
@@ -129,9 +131,12 @@ import { Html5Qrcode } from 'html5-qrcode';
 import isbn from 'isbn3';
 import { useIsbnStore } from '~/stores/isbnStore';
 import ScanPreview from '~/components/ScanPreview.vue';
-import list from './list.vue';
 
-const addDefault = ref(true);
+const addDefault = ref(false);
+
+const isbnStore = useIsbnStore();
+isbnStore.fetchBookInfo('0789312239');
+isbnStore.fetchBookInfo('9787537815789');
 
 const bookActions = computed(() => [
 	{
@@ -139,28 +144,35 @@ const bookActions = computed(() => [
 		icon: 'mdi-information',
 		disabled: false,
 		color: 'primary',
-		toggle: () => { addDefault.value = !addDefault.value; }, active: addDefault.value
+		toggle: () => {
+			addDefault.value = !addDefault.value;
+			if (isbnStore.current && addDefault.value) {
+				isbnStore.addResultToCollection();
+			}
+		},
+		active: addDefault.value
 	},
 	{
 		title: '加入',
 		icon: 'mdi-book-plus',
-		disabled: addDefault.value,
+		disabled: addDefault.value || !isbnStore.current,
 		color: 'success',
-		toggle: () => { }, active: false
+		toggle: () => {
+			isbnStore.addResultToCollection();
+		},
+		active: false
 	},
 	{
 		title: '刪除',
 		icon: 'mdi-export',
-		disabled: addDefault.value,
+		disabled: addDefault.value || !isbnStore.current,
 		color: 'error',
-		toggle: () => { }, active: false
+		toggle: () => { },
+		active: false
 	},
 ]);
 
 
-const isbnStore = useIsbnStore();
-isbnStore.addResultWithFetch('0789312239');
-isbnStore.addResultWithFetch('9787537815789');
 
 const isScanning = ref(false);
 let html5QrCode = null;
@@ -190,7 +202,7 @@ const startScan = async () => {
 		(decodedText) => {
 			const parsed = isbn.parse(decodedText);
 			if (parsed) {
-				isbnStore.addResultWithFetch(parsed.isbn13);
+				isbnStore.fetchBookInfo(parsed.isbn13);
 				// stopScan();
 				// navigateTo('/list');
 			}
