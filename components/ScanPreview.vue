@@ -3,33 +3,30 @@
 		border
 		rounded-lg
 		class="w-100 mb-4 d-flex h-100"
-		elevation="1"
-	>
+		elevation="1">
 		<v-img
 			:src="book.covers?.medium || book.covers?.small"
 			width="100"
 			min-width="100"
 			max-width="180"
 			cover
-			class="bg-grey-lighten-3"
-		>
+			class="bg-grey-lighten-3">
 			<template #placeholder>
 				<div class="d-flex align-center justify-center fill-height">
 					<v-progress-circular
 						indeterminate
-						size="24"
-					/>
+						size="24" />
 				</div>
 			</template>
 		</v-img>
 
-		<div class="flex-grow-1 pa-3 d-flex flex-column justify-center overflow-hidden justify-space-around">
+		<div
+			class="flex-grow-1 pa-3 d-flex flex-column justify-center overflow-hidden justify-space-around">
 			<div>
 				<div class="d-flex justify-space-between align-start mb-1">
 					<div
 						class="text-h6 font-weight-bold text-truncate"
-						style="max-width: 80%"
-					>
+						style="max-width: 80%">
 						{{ book.title || '書名加載中...' }}
 					</div>
 					<div class="d-flex ga-2">
@@ -38,31 +35,34 @@
 							density="comfortable"
 							icon
 							size="small"
-							@click="book.marked = !book.marked"
-						>
-							<v-icon :icon="book.marked
-								? 'mdi-star'
-								: 'mdi-star-outline'
+							@click="book.marked = !book.marked">
+							<v-icon
+								:icon="
+									book.marked
+										? 'mdi-star'
+										: 'mdi-star-outline'
 								" />
 							<v-tooltip
 								activator="parent"
 								location="bottom"
-								text="收藏"
-							/>
+								text="收藏" />
 						</v-btn>
 						<v-btn
 							variant="plain"
 							density="comfortable"
 							icon
 							size="small"
-							@click="noteDialog = true"
-						>
-							<v-icon icon="mdi-text-box-edit-outline" />
+							@click="noteDialog = true">
+							<v-icon
+								:icon="
+									book.notes
+										? 'mdi-text-box'
+										: 'mdi-text-box-edit-outline'
+								" />
 							<v-tooltip
 								activator="parent"
 								location="bottom"
-								text="註記"
-							/>
+								text="註記" />
 						</v-btn>
 					</div>
 				</div>
@@ -74,8 +74,7 @@
 					<v-icon
 						size="16"
 						class="me-2 text-grey"
-						icon="mdi-account"
-					/>
+						icon="mdi-account" />
 					<span class="text-truncate">{{
 						book.authors?.join(', ') || '作者資訊加載中...'
 					}}</span>
@@ -85,8 +84,7 @@
 					<v-icon
 						size="16"
 						class="me-2 text-grey"
-						icon="mdi-office-building"
-					/>
+						icon="mdi-office-building" />
 					<span class="text-truncate">{{
 						book.publisher || '出版社資訊加載中...'
 					}}</span>
@@ -96,7 +94,8 @@
 					<v-icon
 						size="16"
 						class="me-2 text-grey"
-					>mdi-barcode-scan</v-icon>
+						>mdi-barcode-scan</v-icon
+					>
 					<span class="font-weight-medium">{{
 						book.isbn || 'ISBN資訊加載中...'
 					}}</span>
@@ -108,34 +107,29 @@
 					size="x-small"
 					variant="outlined"
 					color="primary"
-					text="繁體中文"
-				/>
+					text="繁體中文" />
 				<v-chip
 					size="x-small"
 					variant="outlined"
-					text="精裝本"
-				/>
+					text="精裝本" />
 			</div>
 		</div>
 	</v-card>
 	<note-dialog
 		v-model="noteDialog"
-		:book="isbnStore.current"
-	/>
-
+		:book="isbnStore.current" />
 </template>
 
 <script setup>
-import { useIsbnStore } from '~/stores/isbnStore';
-import { computed } from 'vue';
-import NoteDialog from '~/components/NoteDialog.vue';
+	import { useIsbnStore } from '~/stores/isbnStore';
+	import { computed } from 'vue';
+	import NoteDialog from '~/components/NoteDialog.vue';
 
-const noteDialog = ref(false);
+	const noteDialog = ref(false);
 
+	const isbnStore = useIsbnStore();
+	const book = computed(() => isbnStore.current); // 假設只顯示第一本
 
-const isbnStore = useIsbnStore();
-const book = computed(() => isbnStore.current); // 假設只顯示第一本
-
-// Emits if you want actions
-const emit = defineEmits(['delete', 'zoom']);
+	// Emits if you want actions
+	const emit = defineEmits(['delete', 'zoom']);
 </script>
