@@ -87,39 +87,37 @@
 						掃描完成後將自動顯示書籍資訊
 					</div>
 				</div>
-				<div class="w-75">
-					<v-item-group class="pa-5 d-flex justify-center">
-						<v-row class="w-100 ga-6">
-							<v-col
-								v-for="action in bookActions"
-								:key="action.title"
-								class="d-flex"
-								cols
-							>
-								<v-item>
-									<v-btn
-										class="d-flex align-center justify-center w-100"
-										@click="action.toggle"
-										:text="action.title"
-										:disabled="action.disabled"
-										:active="action.active"
-										:color="action.color"
-										:prepend-icon="action.prependIcon"
-										variant="tonal"
-									/>
-								</v-item>
-							</v-col>
-						</v-row>
-					</v-item-group>
+				<div class="w-75 pa-5 d-flex justify-center">
+					<v-row>
+						<v-col
+							v-for="action in bookActions"
+							:key="action.title"
+							cols="4"
+							class="d-flex justify-center"
+						>
+							<client-only>
+								<v-btn
+									class="w-75"
+									@click="action.toggle"
+									:text="action.title"
+									:disabled="action.disabled"
+									:active="action.active"
+									:color="action.color"
+									:prepend-icon="action.prependIcon"
+									variant="tonal"
+								/>
+							</client-only>
+						</v-col>
+					</v-row>
 				</div>
 			</v-sheet>
 		</v-col>
 	</v-row>
 	<v-snackbar
-		:timeout="2000"
-		color="success"
-		:text="message"
-		v-model="message"
+		timeout="2000"
+		:color="isbnStore.snackbar.color"
+		:text="isbnStore.snackbar.text"
+		v-model="isbnStore.snackbar.show"
 	/>
 </template>
 
@@ -129,13 +127,17 @@ import { Html5Qrcode } from 'html5-qrcode';
 import isbn from 'isbn3';
 import { useIsbnStore } from '~/stores/isbnStore';
 import ScanPreview from '~/components/ScanPreview.vue';
+import { useLocalStorage } from '@vueuse/core'
+import { useUserSettingStore } from '~/stores/userSettingStore';
 
-const addDefault = ref(false);
 const message = ref(null);
 
 const isbnStore = useIsbnStore();
+const userSettingStore = useUserSettingStore();
 isbnStore.fetchBookInfo('0789312239');
 isbnStore.fetchBookInfo('9787537815789');
+
+
 
 const bookActions = computed(() => [
 	{
@@ -143,21 +145,16 @@ const bookActions = computed(() => [
 		icon: 'mdi-information',
 		disabled: false,
 		color: 'primary',
-		toggle: () => {
-			addDefault.value = !addDefault.value;
-			if (isbnStore.current && addDefault.value) {
-				isbnStore.addResultToCollection();
-			}
-		},
-		active: addDefault.value,
-		prependIcon: addDefault.value
+		toggle: () => userSettingStore.switchAddDefault(),
+		active: userSettingStore.addDefault,
+		prependIcon: userSettingStore.addDefault
 			? 'mdi-check-circle-outline'
 			: 'mdi-circle-outline',
 	},
 	{
 		title: '加入',
 		icon: 'mdi-book-plus',
-		disabled: addDefault.value || !isbnStore.current,
+		disabled: userSettingStore.addDefault || !isbnStore.current,
 		color: 'success',
 		toggle: () => {
 			isbnStore.addResultToCollection();
@@ -168,7 +165,7 @@ const bookActions = computed(() => [
 	{
 		title: '刪除',
 		icon: 'mdi-export',
-		disabled: addDefault.value || !isbnStore.current,
+		disabled: userSettingStore.addDefault || !isbnStore.current,
 		color: 'error',
 		toggle: () => {
 			isbnStore.current = null;
