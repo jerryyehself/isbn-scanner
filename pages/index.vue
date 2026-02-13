@@ -65,12 +65,57 @@
 			<v-divider />
 
 			<v-sheet class="flex-grow-1 d-flex flex-column align-center justify-center bg-surface overflow-hidden">
+				<div class="d-flex mb-2 w-75">
+					<div class="text-subtitle-1 font-weight-medium d-flex">
+						<div>目前已加入
+							<v-chip
+								label
+								size="small"
+								:text="isbnStore.results.length"
+							/>
+							筆資料
+						</div>
+						<div v-if="isbnStore.results.length > 0">
+							，前一筆為
+							<v-chip
+								label
+								size="small"
+								class="font-italic"
+								:text="isbnStore.lastResult.title"
+							/>
+						</div>
+					</div>
+				</div>
 				<div
 					v-if="isbnStore.current"
 					class="w-75 h-50 overflow-y-auto d-flex flex-column justify-space-around align-center"
 				>
-					<scan-preview />
+					<v-slide-group
+						v-model="isbnStore.current"
+						class="pa-4 w-100"
+						selected-class="bg-success"
+						show-arrows
+						mandatory
+					>
+						<v-slide-group-item
+							v-for="book in isbnStore.currentList"
+							:key="book.id"
+							:value="book"
+							v-slot="{ toggle }"
+						>
+							<v-card
+								:class="['ma-2']"
+								@click="toggle"
+								elevation="2"
+								width="900"
+								class="position-relative overflow-hidden"
+							>
+								<scan-preview :book="book" />
+							</v-card>
+						</v-slide-group-item>
+					</v-slide-group>
 				</div>
+
 				<div
 					class="w-75 h-50 overflow-y-auto d-flex flex-column align-center justify-center"
 					v-else
@@ -127,10 +172,10 @@ import { Html5Qrcode } from 'html5-qrcode';
 import isbn from 'isbn3';
 import { useIsbnStore } from '~/stores/isbnStore';
 import ScanPreview from '~/components/ScanPreview.vue';
-import { useLocalStorage } from '@vueuse/core'
 import { useUserSettingStore } from '~/stores/userSettingStore';
 
 const message = ref(null);
+const slide = ref(null)
 
 const isbnStore = useIsbnStore();
 const userSettingStore = useUserSettingStore();

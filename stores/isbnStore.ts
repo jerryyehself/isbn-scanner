@@ -26,6 +26,7 @@ interface CollectionItem {
 interface OpenLibraryEntry {
     title: string;
     authors?: { name: string }[];
+    isbn: string;
     publish_date?: string;
     publishers?: { name: string }[];
     publish_places?: { name: string }[];
@@ -39,6 +40,7 @@ interface OpenLibraryEntry {
     subject_places?: { name: string; url: string }[];
     subject_times?: { name: string; url: string }[];
     subject_people?: { name: string; url: string }[];
+    scanTimeSpan: string;
 }
 
 function extractOpenLibraryEntry(
@@ -55,7 +57,8 @@ function extractOpenLibraryEntry(
     if (!entry || typeof entry !== "object") {
         throw new Error(`找不到 ISBN: ${isbn}`);
     }
-
+    entry.scanTimeSpan = new Date().toLocaleTimeString();
+    entry.isbn = isbn;
     return entry as OpenLibraryEntry;
 }
 
@@ -67,7 +70,7 @@ function mapToCollectionItem(
     return {
         id,
         isbn,
-        scanTimeSpan: new Date().toLocaleTimeString(),
+        scanTimeSpan: entry.scanTimeSpan,
         title: entry.title,
         authors: entry.authors?.map((a) => a.name) ?? [],
         publishDate: entry.publish_date,
@@ -98,7 +101,8 @@ export const useIsbnStore = defineStore("isbn", {
         nextId: 1,
         loading: false,
         error: null as string | null,
-        current: null as CollectionItem | null,
+        current: null as OpenLibraryEntry | null,
+        currentList: [] as OpenLibraryEntry[],
         snackbar: {
             show: false,
             text: "",
@@ -122,13 +126,9 @@ export const useIsbnStore = defineStore("isbn", {
                 );
 
                 const entry = extractOpenLibraryEntry(raw, isbn);
-                const collectionItem = mapToCollectionItem(
-                    entry,
-                    isbn,
-                    this.nextId++,
-                );
 
-                this.current = collectionItem;
+                this.currentList.unshift(entry);
+                this.current = entry;
             } catch (err) {
                 console.error(err);
                 this.error = err instanceof Error ? err.message : "Fetch 失敗";
@@ -139,17 +139,28 @@ export const useIsbnStore = defineStore("isbn", {
         addResultToCollection() {
             if (!this.current) return;
 
-            this.results.unshift(this.current);
+            const collectionItem = mapToCollectionItem(
+                this.current,
+                this.current.isbn,
+                this.nextId++,
+            );
+            this.results.unshift(collectionItem);
             this.snackbar = {
                 show: true,
                 text: `已將 ${this.current.title} 加入清單`,
                 color: "success",
             };
-            this.current = null;
+            this.currentList = this.currentList.filter(
+                (item) => item.scanTimeSpan !== this.current?.scanTimeSpan,
+            );
+            this.current = this.currentList.at(0) || null;
         },
         deleteResult(id: number) {
             this.results = this.results.filter((item) => item.id !== id);
             this.nextId = this.results.length + 1;
         },
+    },
+    getters: {
+        lastResult: (state) => state.results.at(0),
     },
 });

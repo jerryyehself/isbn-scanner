@@ -41,8 +41,8 @@
 							@click="book.marked = !book.marked"
 						>
 							<v-icon :icon="book.marked
-									? 'mdi-star'
-									: 'mdi-star-outline'
+								? 'mdi-star'
+								: 'mdi-star-outline'
 								" />
 							<v-tooltip
 								activator="parent"
@@ -58,8 +58,8 @@
 							@click="noteDialog = true"
 						>
 							<v-icon :icon="book.notes.length
-									? 'mdi-text-box'
-									: 'mdi-text-box-edit-outline'
+								? 'mdi-text-box'
+								: 'mdi-text-box-edit-outline'
 								" />
 							<v-tooltip
 								activator="parent"
@@ -135,7 +135,13 @@ import NoteDialog from '~/components/NoteDialog.vue';
 const noteDialog = ref(false);
 
 const isbnStore = useIsbnStore();
-const book = computed(() => isbnStore.current); // 假設只顯示第一本
+// const book = computed(() => isbnStore.current); // 假設只顯示第一本
+defineProps({
+	book: {
+		type: Object,
+		required: true,
+	},
+});
 
 // Emits if you want actions
 const emit = defineEmits(['delete', 'zoom']);
