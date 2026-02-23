@@ -40,7 +40,7 @@ interface OpenLibraryEntry {
     subject_places?: { name: string; url: string }[];
     subject_times?: { name: string; url: string }[];
     subject_people?: { name: string; url: string }[];
-    scanTimeSpan: string;
+    notes: string[];
 }
 
 function extractOpenLibraryEntry(
@@ -59,6 +59,7 @@ function extractOpenLibraryEntry(
     }
     entry.scanTimeSpan = new Date().toLocaleTimeString();
     entry.isbn = isbn;
+    entry.notes = [];
     return entry as OpenLibraryEntry;
 }
 
@@ -70,7 +71,7 @@ function mapToCollectionItem(
     return {
         id,
         isbn,
-        scanTimeSpan: entry.scanTimeSpan,
+        scanTimeSpan: entry.isbn,
         title: entry.title,
         authors: entry.authors?.map((a) => a.name) ?? [],
         publishDate: entry.publish_date,
@@ -151,13 +152,19 @@ export const useIsbnStore = defineStore("isbn", {
                 color: "success",
             };
             this.currentList = this.currentList.filter(
-                (item) => item.scanTimeSpan !== this.current?.scanTimeSpan,
+                (item) => item.isbn !== this.current?.isbn,
             );
             this.current = this.currentList.at(0) || null;
         },
         deleteResult(id: number) {
             this.results = this.results.filter((item) => item.id !== id);
             this.nextId = this.results.length + 1;
+        },
+        deleteCurrentItem(isbn: string) {
+            this.currentList = this.currentList.filter(
+                (item) => item.isbn !== isbn,
+            );
+            this.current = this.currentList.at(0) || null;
         },
     },
     getters: {

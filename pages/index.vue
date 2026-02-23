@@ -67,7 +67,8 @@
 			<v-sheet class="flex-grow-1 d-flex flex-column align-center justify-center bg-surface overflow-hidden">
 				<div class="d-flex mb-2 w-75">
 					<div class="text-subtitle-1 font-weight-medium d-flex">
-						<div>目前已加入
+						<div>
+							目前已加入
 							<v-chip
 								label
 								size="small"
@@ -75,7 +76,7 @@
 							/>
 							筆資料
 						</div>
-						<div v-if="isbnStore.results.length > 0">
+						<div v-if="isbnStore.results.length">
 							，前一筆為
 							<v-chip
 								label
@@ -87,8 +88,8 @@
 					</div>
 				</div>
 				<div
-					v-if="isbnStore.current"
-					class="w-75 h-50 overflow-y-auto d-flex flex-column justify-space-around align-center"
+					v-if="isbnStore.currentList.length"
+					class="w-100 h-50 overflow-y-auto d-flex flex-column justify-space-around align-center"
 				>
 					<v-slide-group
 						v-model="isbnStore.current"
@@ -99,7 +100,7 @@
 					>
 						<v-slide-group-item
 							v-for="book in isbnStore.currentList"
-							:key="book.id"
+							:key="book.isbn"
 							:value="book"
 							v-slot="{ toggle }"
 						>
@@ -107,7 +108,7 @@
 								:class="['ma-2']"
 								@click="toggle"
 								elevation="2"
-								width="900"
+								style="width: 65vw; max-width: 100%;"
 								class="position-relative overflow-hidden"
 							>
 								<scan-preview :book="book" />
@@ -137,7 +138,7 @@
 						<v-col
 							v-for="action in bookActions"
 							:key="action.title"
-							cols="4"
+							:cols="12 / bookActions.length"
 							class="d-flex justify-center"
 						>
 							<client-only>
@@ -204,16 +205,6 @@ const bookActions = computed(() => [
 		toggle: () => {
 			isbnStore.addResultToCollection();
 			message.value = '已加入清單';
-		},
-		active: false,
-	},
-	{
-		title: '刪除',
-		icon: 'mdi-export',
-		disabled: userSettingStore.addDefault || !isbnStore.current,
-		color: 'error',
-		toggle: () => {
-			isbnStore.current = null;
 		},
 		active: false,
 	},
