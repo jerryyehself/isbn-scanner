@@ -117,7 +117,7 @@
 				variant="plain"
 				density="comfortable"
 				icon
-				@click="isbnStore.addResultToCollection()"
+				@click="isbnStore.addResultToCollection(book)"
 			>
 				<v-icon icon="mdi-plus-outline" />
 				<v-tooltip
@@ -143,7 +143,7 @@
 	</v-card>
 	<note-dialog
 		v-model="noteDialog"
-		:book="isbnStore.current"
+		:book="book"
 	/>
 </template>
 

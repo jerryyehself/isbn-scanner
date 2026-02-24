@@ -102,7 +102,7 @@ export const useIsbnStore = defineStore("isbn", {
         nextId: 1,
         loading: false,
         error: null as string | null,
-        current: null as OpenLibraryEntry | null,
+        // current: null as OpenLibraryEntry | null,
         currentList: [] as OpenLibraryEntry[],
         snackbar: {
             show: false,
@@ -129,7 +129,7 @@ export const useIsbnStore = defineStore("isbn", {
                 const entry = extractOpenLibraryEntry(raw, isbn);
 
                 this.currentList.unshift(entry);
-                this.current = entry;
+                // this.current = entry;
             } catch (err) {
                 console.error(err);
                 this.error = err instanceof Error ? err.message : "Fetch 失敗";
@@ -137,24 +137,23 @@ export const useIsbnStore = defineStore("isbn", {
                 this.loading = false;
             }
         },
-        addResultToCollection() {
-            if (!this.current) return;
+        addResultToCollection(currentItem: OpenLibraryEntry) {
+            // if (!this.current) return;
 
             const collectionItem = mapToCollectionItem(
-                this.current,
-                this.current.isbn,
+                currentItem,
+                currentItem.isbn,
                 this.nextId++,
             );
             this.results.unshift(collectionItem);
             this.snackbar = {
                 show: true,
-                text: `已將 ${this.current.title} 加入清單`,
+                text: `已將 ${currentItem.title} 加入清單`,
                 color: "success",
             };
             this.currentList = this.currentList.filter(
-                (item) => item.isbn !== this.current?.isbn,
+                (item) => item.isbn !== currentItem.isbn,
             );
-            this.current = this.currentList.at(0) || null;
         },
         deleteResult(id: number) {
             this.results = this.results.filter((item) => item.id !== id);
@@ -164,7 +163,7 @@ export const useIsbnStore = defineStore("isbn", {
             this.currentList = this.currentList.filter(
                 (item) => item.isbn !== isbn,
             );
-            this.current = this.currentList.at(0) || null;
+            // this.current = this.currentList.at(0) || null;
         },
     },
     getters: {

@@ -92,7 +92,6 @@
 					class="w-100 h-50 overflow-y-auto d-flex flex-column justify-space-around align-center"
 				>
 					<v-slide-group
-						v-model="isbnStore.current"
 						class="pa-4 w-100"
 						selected-class="bg-success"
 						show-arrows
@@ -198,9 +197,9 @@ const bookActions = computed(() => [
 			: 'mdi-circle-outline',
 	},
 	{
-		title: '加入',
+		title: '全部加入',
 		icon: 'mdi-book-plus',
-		disabled: userSettingStore.addDefault || !isbnStore.current,
+		disabled: userSettingStore.addDefault || isbnStore.currentList.length === 0,
 		color: 'success',
 		toggle: () => {
 			isbnStore.addResultToCollection();
