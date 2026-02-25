@@ -1,6 +1,7 @@
 import basicSsl from "@vitejs/plugin-basic-ssl";
 
 export default defineNuxtConfig({
+    compatibilityDate: "2024-04-03",
     css: ["vuetify/styles"],
     build: {
         transpile: ["vuetify"],

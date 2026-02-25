@@ -65,50 +65,30 @@
 			<v-divider />
 
 			<v-sheet class="flex-grow-1 d-flex flex-column align-center justify-center bg-surface overflow-hidden">
-				<div class="d-flex mb-2 w-75">
-					<div class="text-subtitle-1 font-weight-medium d-flex">
-						<div>
-							目前已加入
-							<v-chip
-								label
-								size="small"
-								:text="isbnStore.results.length"
-							/>
-							筆資料
-						</div>
-						<div v-if="isbnStore.results.length">
-							，前一筆為
-							<v-chip
-								label
-								size="small"
-								class="font-italic"
-								:text="isbnStore.lastResult.title"
-							/>
-						</div>
-					</div>
-				</div>
+
 				<div
 					v-if="isbnStore.currentList.length"
-					class="w-100 h-50 overflow-y-auto d-flex flex-column justify-space-around align-center"
+					class="w-75 h-50 overflow-y-auto d-flex flex-column justify-space-around align-center"
 				>
 					<v-slide-group
-						class="pa-4 w-100"
+						class="pa-4 w-100 d-flex align-center justify-center"
 						selected-class="bg-success"
 						show-arrows
 						mandatory
+						center-active
 					>
 						<v-slide-group-item
 							v-for="book in isbnStore.currentList"
 							:key="book.isbn"
 							:value="book"
 							v-slot="{ toggle }"
+							class=""
 						>
 							<v-card
-								:class="['ma-2']"
+								:class="['ma-2', 'w-100']"
 								@click="toggle"
 								elevation="2"
-								style="width: 65vw; max-width: 100%;"
-								class="position-relative overflow-hidden"
+								style="min-width: 700px;"
 							>
 								<scan-preview :book="book" />
 							</v-card>
@@ -132,7 +112,29 @@
 						掃描完成後將自動顯示書籍資訊
 					</div>
 				</div>
-				<div class="w-75 pa-5 d-flex justify-center">
+				<div class="w-75 pa-5 d-flex flex-column justify-center">
+					<v-row>
+						<v-col class="text-subtitle-1 font-weight-medium d-flex w-100 align-center justify-center">
+							<div>
+								目前已加入
+								<v-chip
+									label
+									size="small"
+									:text="isbnStore.results.length"
+								/>
+								筆資料
+							</div>
+							<div v-if="isbnStore.results.length">
+								，前一筆為
+								<v-chip
+									label
+									size="small"
+									class="font-italic"
+									:text="isbnStore.lastResult.title"
+								/>
+							</div>
+						</v-col>
+					</v-row>
 					<v-row>
 						<v-col
 							v-for="action in bookActions"

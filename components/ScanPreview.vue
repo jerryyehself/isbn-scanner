@@ -2,7 +2,7 @@
 	<v-card
 		border
 		rounded-lg
-		class="mb-4 d-flex h-100"
+		class="mb-4 d-flex h-100 w-100"
 		elevation="1"
 	>
 		<v-img
