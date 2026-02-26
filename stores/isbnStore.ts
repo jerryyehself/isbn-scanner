@@ -71,7 +71,7 @@ function mapToCollectionItem(
     return {
         id,
         isbn,
-        scanTimeSpan: entry.isbn,
+        scanTimeSpan: entry.scanTimeSpan,
         title: entry.title,
         authors: entry.authors?.map((a) => a.name) ?? [],
         publishDate: entry.publish_date,
