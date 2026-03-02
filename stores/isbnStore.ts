@@ -60,6 +60,7 @@ function extractOpenLibraryEntry(
     entry.scanTimeSpan = new Date().toLocaleTimeString();
     entry.isbn = isbn;
     entry.notes = [];
+    entry.marked = false;
     return entry as OpenLibraryEntry;
 }
 
@@ -92,7 +93,7 @@ function mapToCollectionItem(
             large: entry.cover?.large,
         },
         marked: false,
-        notes: [],
+        notes: entry.notes,
     };
 }
 

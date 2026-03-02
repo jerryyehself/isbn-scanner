@@ -177,7 +177,6 @@ import ScanPreview from '~/components/ScanPreview.vue';
 import { useUserSettingStore } from '~/stores/userSettingStore';
 
 const message = ref(null);
-const slide = ref(null)
 
 const isbnStore = useIsbnStore();
 const userSettingStore = useUserSettingStore();
@@ -204,7 +203,11 @@ const bookActions = computed(() => [
 		disabled: userSettingStore.addDefault || isbnStore.currentList.length === 0,
 		color: 'success',
 		toggle: () => {
-			isbnStore.addResultToCollection();
+			isbnStore.currentList.forEach((item) => {
+				if (!isbnStore.results.some(r => r.isbn === item.isbn)) {
+					isbnStore.addResultToCollection(item);
+				}
+			});
 			message.value = '已加入清單';
 		},
 		active: false,
