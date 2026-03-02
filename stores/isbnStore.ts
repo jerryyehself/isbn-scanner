@@ -20,10 +20,13 @@ interface CollectionItem {
         time: string[];
         people: string[];
     };
+    marked: boolean;
+    notes: string[];
 }
 interface OpenLibraryEntry {
     title: string;
     authors?: { name: string }[];
+    isbn: string;
     publish_date?: string;
     publishers?: { name: string }[];
     publish_places?: { name: string }[];
@@ -37,6 +40,7 @@ interface OpenLibraryEntry {
     subject_places?: { name: string; url: string }[];
     subject_times?: { name: string; url: string }[];
     subject_people?: { name: string; url: string }[];
+    notes: string[];
 }
 
 function extractOpenLibraryEntry(
@@ -53,7 +57,10 @@ function extractOpenLibraryEntry(
     if (!entry || typeof entry !== "object") {
         throw new Error(`找不到 ISBN: ${isbn}`);
     }
-
+    entry.scanTimeSpan = new Date().toLocaleTimeString();
+    entry.isbn = isbn;
+    entry.notes = [];
+    entry.marked = false;
     return entry as OpenLibraryEntry;
 }
 
@@ -65,7 +72,7 @@ function mapToCollectionItem(
     return {
         id,
         isbn,
-        scanTimeSpan: new Date().toLocaleTimeString(),
+        scanTimeSpan: entry.scanTimeSpan,
         title: entry.title,
         authors: entry.authors?.map((a) => a.name) ?? [],
         publishDate: entry.publish_date,
@@ -85,6 +92,8 @@ function mapToCollectionItem(
             medium: entry.cover?.medium,
             large: entry.cover?.large,
         },
+        marked: false,
+        notes: entry.notes,
     };
 }
 
@@ -94,10 +103,17 @@ export const useIsbnStore = defineStore("isbn", {
         nextId: 1,
         loading: false,
         error: null as string | null,
+        // current: null as OpenLibraryEntry | null,
+        currentList: [] as OpenLibraryEntry[],
+        snackbar: {
+            show: false,
+            text: "",
+            color: "success",
+        },
     }),
 
     actions: {
-        async addResultWithFetch(isbn: string) {
+        async fetchBookInfo(isbn: string) {
             if (this.results.some((item) => item.isbn === isbn)) {
                 console.log("此 ISBN 已存在");
                 return;
@@ -112,13 +128,9 @@ export const useIsbnStore = defineStore("isbn", {
                 );
 
                 const entry = extractOpenLibraryEntry(raw, isbn);
-                const collectionItem = mapToCollectionItem(
-                    entry,
-                    isbn,
-                    this.nextId++,
-                );
 
-                this.results.unshift(collectionItem);
+                this.currentList.unshift(entry);
+                // this.current = entry;
             } catch (err) {
                 console.error(err);
                 this.error = err instanceof Error ? err.message : "Fetch 失敗";
@@ -126,10 +138,36 @@ export const useIsbnStore = defineStore("isbn", {
                 this.loading = false;
             }
         },
+        addResultToCollection(currentItem: OpenLibraryEntry) {
+            // if (!this.current) return;
 
+            const collectionItem = mapToCollectionItem(
+                currentItem,
+                currentItem.isbn,
+                this.nextId++,
+            );
+            this.results.unshift(collectionItem);
+            this.snackbar = {
+                show: true,
+                text: `已將 ${currentItem.title} 加入清單`,
+                color: "success",
+            };
+            this.currentList = this.currentList.filter(
+                (item) => item.isbn !== currentItem.isbn,
+            );
+        },
         deleteResult(id: number) {
             this.results = this.results.filter((item) => item.id !== id);
             this.nextId = this.results.length + 1;
         },
+        deleteCurrentItem(isbn: string) {
+            this.currentList = this.currentList.filter(
+                (item) => item.isbn !== isbn,
+            );
+            // this.current = this.currentList.at(0) || null;
+        },
+    },
+    getters: {
+        lastResult: (state) => state.results.at(0),
     },
 });
