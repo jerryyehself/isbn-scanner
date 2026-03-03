@@ -2,7 +2,7 @@
 	<v-card
 		border
 		rounded-lg
-		class="mb-4 d-flex h-100 w-100"
+		class="d-flex h-100 w-100"
 		elevation="1"
 	>
 		<v-img
@@ -24,8 +24,9 @@
 		</v-img>
 		<v-card-text class="flex-grow-1 pa-3 d-flex flex-column justify-center overflow-hidden justify-space-around">
 			<div>
-				<div class="text-h6 font-weight-bold text-truncate">
-					{{ book.title || '書名加載中...' }}
+				<div class="d-flex align-center justify-space-between">
+					<span class="text-h6 font-weight-bold text-truncate">{{ book.title || '書名加載中...' }}</span>
+					<slot name="timeSpan" />
 				</div>
 				<v-divider />
 			</div>
@@ -113,19 +114,7 @@
 					text="註記"
 				/>
 			</v-btn>
-			<v-btn
-				variant="plain"
-				density="comfortable"
-				icon
-				@click="isbnStore.addResultToCollection(book)"
-			>
-				<v-icon icon="mdi-plus-outline" />
-				<v-tooltip
-					activator="parent"
-					location="bottom"
-					text="加入清單"
-				/>
-			</v-btn>
+			<slot name="addResult" />
 			<v-btn
 				variant="plain"
 				density="comfortable"

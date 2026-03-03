@@ -4,11 +4,11 @@ interface CollectionItem {
     scanTimeSpan: string;
     isbn: string;
     title: string;
-    authors: string[];
+    authors: { name: string }[];
     publishDate?: string;
-    publishPlace?: string[];
-    publisher?: string;
-    covers?: {
+    publishPlace?: { name: string }[];
+    publishers?: { name: string }[];
+    cover?: {
         small?: string;
         medium?: string;
         large?: string;
@@ -74,10 +74,10 @@ function mapToCollectionItem(
         isbn,
         scanTimeSpan: entry.scanTimeSpan,
         title: entry.title,
-        authors: entry.authors?.map((a) => a.name) ?? [],
+        authors: entry.authors ?? [],
         publishDate: entry.publish_date,
-        publishPlace: entry.publish_places?.map((p) => p.name),
-        publisher: entry.publishers?.map((p) => p.name).join(", "),
+        publishPlace: entry.publish_places ?? [],
+        publishers: entry.publishers ?? [],
         pages: entry.number_of_pages
             ? entry.number_of_pages.toString()
             : undefined,
@@ -87,12 +87,12 @@ function mapToCollectionItem(
             time: entry.subject_times?.map((s) => s.name) ?? [],
             people: entry.subject_people?.map((s) => s.name) ?? [],
         },
-        covers: {
+        cover: {
             small: entry.cover?.small,
             medium: entry.cover?.medium,
             large: entry.cover?.large,
         },
-        marked: false,
+        marked: entry.marked ?? false,
         notes: entry.notes,
     };
 }
