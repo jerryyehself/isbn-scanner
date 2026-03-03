@@ -47,6 +47,10 @@
 			</v-card>
 		</v-form>
 	</v-dialog>
+	<v-snackbar
+		:timeout="2000"
+		color="success"
+		variant="outlined" />
 </template>
 <script setup>
 	import { ref } from 'vue';
