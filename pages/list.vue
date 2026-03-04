@@ -48,44 +48,44 @@
 					text="刪除所有紀錄"
 				/>
 			</v-btn>
-
-			<v-btn-toggle
-				v-model="viewMode"
-				mandatory
-				border
-				divided
-				density="comfortable"
-			>
-				<v-btn
-					value="list"
-					icon
+			<client-only>
+				<v-btn-toggle
+					v-model="userSettingStore.resultViewMode"
+					mandatory
+					border
+					divided
+					density="comfortable"
 				>
-					<v-icon
-						icon="mdi-view-list"
-						size="small"
-					/>
-					<v-tooltip
-						activator="parent"
-						location="bottom"
+					<v-btn
+						value="list"
+						icon
 					>
-						條列檢視
-					</v-tooltip>
-				</v-btn>
-				<v-btn
-					value="grid"
-					icon
-				>
-					<v-icon
-						icon="mdi-view-grid"
-						size="small"
-					/>
-					<v-tooltip
-						activator="parent"
-						location="bottom"
-						text="網格檢視"
-					/>
-				</v-btn>
-			</v-btn-toggle>
+						<v-icon
+							icon="mdi-view-list"
+							size="small"
+						/>
+						<v-tooltip
+							activator="parent"
+							location="bottom"
+							text="條列檢視"
+						/>
+					</v-btn>
+					<v-btn
+						value="grid"
+						icon
+					>
+						<v-icon
+							icon="mdi-view-grid"
+							size="small"
+						/>
+						<v-tooltip
+							activator="parent"
+							location="bottom"
+							text="網格檢視"
+						/>
+					</v-btn>
+				</v-btn-toggle>
+			</client-only>
 		</v-toolbar>
 		<v-sheet
 			class="flex-grow-1 d-flex align-center justify-center"
@@ -95,7 +95,7 @@
 		</v-sheet>
 		<v-sheet v-else>
 			<div
-				v-if="viewMode == 'grid'"
+				v-if="userSettingStore.resultViewMode == 'grid'"
 				class="overflow-y-auto px-2 flex-grow-1"
 			>
 				<v-row
@@ -108,7 +108,8 @@
 						v-for="item in isbnStore.results"
 						:key="item.isbn"
 					>
-						<v-card
+						<simple-card :book="item" />
+						<!-- <v-card
 							variant="flat"
 							class="rounded overflow-hidden"
 							color="surface-variant"
@@ -123,7 +124,6 @@
 									class="pa-2 text-white d-flex align-center justify-between"
 									style="background: rgba(0, 0, 0, 0.5)"
 								>
-									<!-- 左側文字區 -->
 									<div class="flex-grow-1 min-w-0">
 										<div class="text-subtitle-2 text-truncate">
 											{{ item.title }}
@@ -133,7 +133,6 @@
 										</div>
 									</div>
 
-									<!-- 右側刪除鈕 -->
 									<v-btn
 										icon="mdi-delete"
 										variant="text"
@@ -144,7 +143,7 @@
 									/>
 								</div>
 							</v-img>
-						</v-card>
+						</v-card> -->
 					</v-col>
 				</v-row>
 			</div>
@@ -174,46 +173,13 @@
 						<v-divider
 							v-if="index < isbnStore.results.length - 1"
 							class="border-opacity-25"
-						></v-divider>
+						/>
 					</template>
 				</v-list>
 			</div>
 		</v-sheet>
 
-		<v-dialog
-			v-model="zoomDialog"
-			max-width="400"
-			class="rounded-lg"
-		>
-			<v-card>
-				<v-toolbar
-					color="transparent"
-					density="compact"
-				>
-					<v-toolbar-title class="text-subtitle-1">書封</v-toolbar-title>
-					<v-spacer></v-spacer>
-					<v-btn
-						icon="mdi-close"
-						@click="zoomDialog = false"
-					></v-btn>
-				</v-toolbar>
-				<v-img
-					:src="selectedImg"
-					width="100%"
-					min-height="300"
-					cover
-				>
-					<template v-slot:placeholder>
-						<div class="fill-height bg-grey-lighten-4">
-							<v-progress-linear
-								color="grey-lighten-1"
-								indeterminate
-							/>
-						</div>
-					</template>
-				</v-img>
-			</v-card>
-		</v-dialog>
+
 	</v-container>
 </template>
 
@@ -221,11 +187,13 @@
 // 1. 引入剛剛定義的倉庫
 import { useIsbnStore } from '~/stores/isbnStore';
 import { useExportStore } from '~/stores/exportStore';
+import { useUserSettingStore } from '~/stores/userSettingStore';
 import ExportDialog from '@/components/ExportDialog.vue';
 import ScanPreview from '@/components/ScanPreview.vue';
-
+import SimpleCard from '@/components/SimpleCard.vue';
 // 2. 實例化它，這樣 template 才能讀到 isbnStore
 const isbnStore = useIsbnStore();
+const userSettingStore = useUserSettingStore();
 const zoomDialog = ref(false);
 const selectedImg = ref('');
 const viewMode = ref('list');

@@ -5,10 +5,16 @@ import { useIsbnStore } from "./isbnStore";
 
 export const useUserSettingStore = defineStore("settings", () => {
     const addDefault = useLocalStorage("addDefault", false);
+    const resultViewMode = useLocalStorage("resultViewMode", "list");
 
     function switchAddDefault() {
         addDefault.value = !addDefault.value;
     }
 
-    return { addDefault, switchAddDefault };
+    function toggleViewMode() {
+        resultViewMode.value =
+            resultViewMode.value === "list" ? "grid" : "list";
+    }
+
+    return { addDefault, switchAddDefault, resultViewMode };
 });
