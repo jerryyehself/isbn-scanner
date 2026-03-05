@@ -47,8 +47,6 @@
 
 <script setup>
 import { ref, watch } from 'vue';
-import { useIsbnStore } from '../stores/isbnStore';
-import { useUserSettingStore } from '../stores/userSettingStore';
 
 const theme = ref('light');
 
@@ -76,20 +74,4 @@ watch(group, () => {
 	drawer.value = false;
 });
 
-const isbnStore = useIsbnStore();
-const userSettingStore = useUserSettingStore();
-watch(
-	[() => userSettingStore.addDefault, () => isbnStore.currentList],
-	([auto, currentList]) => {
-		if (!auto || currentList.length === 0) return;
-
-		currentList.forEach((item) => {
-			// 檢查這本書是否已經在 results 裡
-			if (!isbnStore.results.some(r => r.isbn === item.isbn)) {
-				isbnStore.addResultToCollection(item);
-			}
-		});
-	},
-	{ immediate: true, deep: true } // deep 確保陣列內元素改變也會觸發
-);
 </script>

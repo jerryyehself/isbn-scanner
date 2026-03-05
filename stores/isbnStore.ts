@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import { useLocalStorage } from "@vueuse/core";
 import { ref, computed } from "vue";
+import { useUserSettingStore } from "./userSettingStore";
 
 // --- 保持原有的 Interface 定義 ---
 interface CollectionItem {
@@ -120,6 +121,8 @@ export const useIsbnStore = defineStore("isbn", () => {
         color: "success",
     });
 
+    const userSettingStore = useUserSettingStore();
+
     // 2. Getters (使用 computed)
     const lastResult = computed(() => results.value[0]);
 
@@ -139,7 +142,12 @@ export const useIsbnStore = defineStore("isbn", () => {
             );
 
             const entry = extractOpenLibraryEntry(raw, isbn);
-            currentList.value.unshift(entry);
+            // 邏輯直接寫在這裡
+            if (userSettingStore.addDefault) {
+                addResultToCollection(entry);
+            } else {
+                currentList.value.unshift(entry);
+            }
         } catch (err) {
             console.error(err);
             error.value = err instanceof Error ? err.message : "Fetch 失敗";

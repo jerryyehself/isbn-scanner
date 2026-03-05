@@ -5,12 +5,12 @@
 		color="surface-variant"
 	>
 		<v-img
-			:src="book.covers?.medium || book.covers?.small"
+			:src="book.cover?.medium || book.cover?.small"
 			aspect-ratio="0.7"
 			cover
 			class="align-end"
 		>
-			<v-card-actions class="align-center justify-space-around bg-grey-lighten-2">
+			<v-card-actions class="align-center justify-space-around actions-bg">
 				<v-btn
 					variant="plain"
 					density="comfortable"
@@ -84,3 +84,8 @@ defineProps({
 // Emits if you want actions
 const emit = defineEmits(['delete', 'zoom']);
 </script>
+<style>
+.actions-bg {
+	background: rgba(128, 128, 128, 0.7);
+}
+</style>

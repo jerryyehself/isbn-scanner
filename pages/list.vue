@@ -12,43 +12,43 @@
 					共 {{ isbnStore.results.length }} 筆
 				</div>
 			</v-toolbar-title>
-			<v-btn
-				:disabled="isbnStore.results.length === 0"
-				variant="tonal"
-				class="me-2"
-				height="40"
-				@click="exportDialog = true"
-			>
-				<v-icon
-					size="20"
-					icon="mdi-export"
-				/>
-				<v-tooltip
-					activator="parent"
-					location="bottom"
-					text="匯出資料"
-				/>
-			</v-btn>
-			<ExportDialog v-model="exportDialog" />
-			<v-btn
-				color="error"
-				variant="tonal"
-				@click="clearAll"
-				:disabled="isbnStore.results.length === 0"
-				class="me-4"
-				height="40"
-			>
-				<v-icon
-					size="20"
-					icon="mdi-delete-sweep"
-				/>
-				<v-tooltip
-					activator="parent"
-					location="bottom"
-					text="刪除所有紀錄"
-				/>
-			</v-btn>
 			<client-only>
+				<v-btn
+					:disabled="isbnStore.results.length === 0"
+					variant="tonal"
+					class="me-2"
+					height="40"
+					@click="exportDialog = true"
+				>
+					<v-icon
+						size="20"
+						icon="mdi-export"
+					/>
+					<v-tooltip
+						activator="parent"
+						location="bottom"
+						text="匯出資料"
+					/>
+				</v-btn>
+				<ExportDialog v-model="exportDialog" />
+				<v-btn
+					color="error"
+					variant="tonal"
+					@click="clearAll"
+					:disabled="isbnStore.results.length === 0"
+					class="me-4"
+					height="40"
+				>
+					<v-icon
+						size="20"
+						icon="mdi-delete-sweep"
+					/>
+					<v-tooltip
+						activator="parent"
+						location="bottom"
+						text="刪除所有紀錄"
+					/>
+				</v-btn>
 				<v-btn-toggle
 					v-model="userSettingStore.resultViewMode"
 					mandatory
@@ -93,11 +93,15 @@
 		>
 			目前沒有紀錄
 		</v-sheet>
-		<v-sheet v-else>
+		<v-sheet
+			v-else
+			class="flex-grow-1 d-flex w-100"
+		>
 			<div
 				v-if="userSettingStore.resultViewMode == 'grid'"
-				class="overflow-y-auto px-2 flex-grow-1"
+				class="w-100 h-100 overflow-y-auto overflow-x-hidden "
 			>
+
 				<v-row
 					dense
 					align="start"
@@ -148,7 +152,7 @@
 				</v-row>
 			</div>
 			<div
-				class="d-flex flex-column gap-4 mb-4"
+				class="d-flex flex-column gap-4 mb-4 w-100"
 				v-else
 			>
 				<v-list
