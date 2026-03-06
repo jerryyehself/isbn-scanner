@@ -4,136 +4,88 @@
 			color="transparent"
 			class="mb-4"
 		>
-			<v-toolbar-title class="flex-shrink-0">
-				<div class="text-h5 font-weight-bold">掃描紀錄</div>
+			<v-toolbar-title
+				class="flex-shrink-0 ml-0 font-weight-bold"
+				text="掃描紀錄"
+			>
 				<div class="text-caption text-grey">
 					共 {{ isbnStore.results.length }} 筆
 				</div>
 			</v-toolbar-title>
-
-			<v-spacer></v-spacer>
-
-			<v-btn
-				:disabled="isbnStore.results.length === 0"
-				variant="tonal"
-				class="me-2"
-				height="40"
-				@click="exportDialog = true"
-			>
-				<v-icon size="22">mdi-export</v-icon>
-				<v-tooltip
-					activator="parent"
-					location="bottom"
-				>
-					匯出資料
-				</v-tooltip>
-			</v-btn>
-			<ExportDialog v-model="exportDialog" />
-			<v-btn
-				color="error"
-				variant="tonal"
-				@click="clearAll"
-				:disabled="isbnStore.results.length === 0"
-				class="me-4"
-				height="40"
-			>
-				<v-icon size="22">mdi-delete-sweep</v-icon>
-				<v-tooltip
-					activator="parent"
-					location="bottom"
-				>
-					全部刪除
-				</v-tooltip>
-			</v-btn>
-			<!-- <template v-slot:default>
-				<v-form
-					ref="exportForm"
-					@submit.prevent="submitExport">
-					<v-card title="請選擇匯出方式">
-						<v-divider></v-divider>
-						<v-card-text class="px-4">
-							<v-radio-group
-								v-model="dialog"
-								:rules="exportRule">
-								<div
-									v-for="item in exportList"
-									:key="item.value"
-									class="mb-2">
-									<v-radio
-										:label="item.title"
-										:value="item.value" />
-
-									<v-expand-transition
-										v-if="
-											dialog === item.value &&
-											item.value !== 'local'
-										"
-										class="ml-6 mt-2">
-										<v-text-field
-											density="compact"
-											:rules="item.rules"
-											v-model="
-												exportStore.results[
-													item.value === 'email'
-														? 'email'
-														: 'googleSheetKey'
-												]
-											"
-											:label="`請輸入 ${item.sub}`" />
-									</v-expand-transition>
-								</div>
-							</v-radio-group>
-						</v-card-text>
-						<v-divider></v-divider>
-						<v-card-actions>
-							<v-btn
-								text="關閉"
-								@click="exportDialog = false"></v-btn>
-
-							<v-spacer></v-spacer>
-
-							<v-btn
-								color="surface-variant"
-								text="確認"
-								variant="flat"
-								type="submit"></v-btn>
-						</v-card-actions>
-					</v-card>
-				</v-form>
-			</template> -->
-			<v-btn-toggle
-				v-model="viewMode"
-				mandatory
-				border
-				divided
-				density="comfortable"
-				height="40"
-			>
+			<client-only>
 				<v-btn
-					value="list"
-					icon
+					:disabled="isbnStore.results.length === 0"
+					variant="tonal"
+					class="me-2"
+					height="40"
+					@click="exportDialog = true"
 				>
-					<v-icon>mdi-view-list</v-icon>
+					<v-icon
+						size="20"
+						icon="mdi-export"
+					/>
 					<v-tooltip
 						activator="parent"
 						location="bottom"
-					>
-						條列檢視
-					</v-tooltip>
+						text="匯出資料"
+					/>
 				</v-btn>
+				<ExportDialog v-model="exportDialog" />
 				<v-btn
-					value="grid"
-					icon
+					color="error"
+					variant="tonal"
+					@click="clearAll"
+					:disabled="isbnStore.results.length === 0"
+					class="me-4"
+					height="40"
 				>
-					<v-icon>mdi-view-grid</v-icon>
+					<v-icon
+						size="20"
+						icon="mdi-delete-sweep"
+					/>
 					<v-tooltip
 						activator="parent"
 						location="bottom"
-					>
-						網格檢視
-					</v-tooltip>
+						text="刪除所有紀錄"
+					/>
 				</v-btn>
-			</v-btn-toggle>
+				<v-btn-toggle
+					v-model="userSettingStore.resultViewMode"
+					mandatory
+					border
+					divided
+					density="comfortable"
+				>
+					<v-btn
+						value="list"
+						icon
+					>
+						<v-icon
+							icon="mdi-view-list"
+							size="small"
+						/>
+						<v-tooltip
+							activator="parent"
+							location="bottom"
+							text="條列檢視"
+						/>
+					</v-btn>
+					<v-btn
+						value="grid"
+						icon
+					>
+						<v-icon
+							icon="mdi-view-grid"
+							size="small"
+						/>
+						<v-tooltip
+							activator="parent"
+							location="bottom"
+							text="網格檢視"
+						/>
+					</v-btn>
+				</v-btn-toggle>
+			</client-only>
 		</v-toolbar>
 		<v-sheet
 			class="flex-grow-1 d-flex align-center justify-center"
@@ -141,11 +93,15 @@
 		>
 			目前沒有紀錄
 		</v-sheet>
-		<v-sheet v-else>
+		<v-sheet
+			v-else
+			class="flex-grow-1 d-flex w-100"
+		>
 			<div
-				v-if="viewMode == 'grid'"
-				class="overflow-y-auto px-2 flex-grow-1"
+				v-if="userSettingStore.resultViewMode == 'grid'"
+				class="w-100 h-100 overflow-y-auto overflow-x-hidden "
 			>
+
 				<v-row
 					dense
 					align="start"
@@ -156,7 +112,8 @@
 						v-for="item in isbnStore.results"
 						:key="item.isbn"
 					>
-						<v-card
+						<simple-card :book="item" />
+						<!-- <v-card
 							variant="flat"
 							class="rounded overflow-hidden"
 							color="surface-variant"
@@ -171,7 +128,6 @@
 									class="pa-2 text-white d-flex align-center justify-between"
 									style="background: rgba(0, 0, 0, 0.5)"
 								>
-									<!-- 左側文字區 -->
 									<div class="flex-grow-1 min-w-0">
 										<div class="text-subtitle-2 text-truncate">
 											{{ item.title }}
@@ -181,7 +137,6 @@
 										</div>
 									</div>
 
-									<!-- 右側刪除鈕 -->
 									<v-btn
 										icon="mdi-delete"
 										variant="text"
@@ -192,134 +147,43 @@
 									/>
 								</div>
 							</v-img>
-						</v-card>
+						</v-card> -->
 					</v-col>
 				</v-row>
 			</div>
 			<div
-				class="d-flex flex-column gap-4 mb-4"
+				class="d-flex flex-column gap-4 mb-4 w-100"
 				v-else
 			>
 				<v-list
 					lines="two"
 					border
-					class="rounded-lg"
+					class="rounded-lg py-0"
 				>
 					<template
 						v-for="(item, index) in isbnStore.results"
 						:key="item.id"
 					>
-						<v-list-item
-							:title="item.isbn"
-							:prepend-avatar="item.coverSmall"
-						>
-							<template #subtitle>
-								<ClientOnly>
-									{{ item.time }}
-								</ClientOnly>
-							</template>
-							<template v-slot:prepend>
-								<v-avatar
-									rounded="lg"
-									size="50"
-									class="cursor-pointer"
-								>
-									<v-tooltip
-										activator="parent"
-										location="top"
-									>
-										<v-card
-											variant="flat"
-											class="bg-transparent"
-											max-width="150"
-										>
-											<v-img
-												:src="item.covers?.medium"
-												width="150"
-												aspect-ratio="0.7"
-												cover
-												class="rounded shadow-lg"
-											>
-											</v-img>
-										</v-card>
-									</v-tooltip>
-									<v-img
-										:src="item.covers?.small"
-										alt="cover"
-									>
-										<template #placeholder>
-											<div class="d-flex align-center justify-center fill-height">
-												<v-progress-circular
-													indeterminate
-													size="24"
-												/>
-											</div>
-										</template>
-									</v-img>
-								</v-avatar>
-							</template>
-							<v-list-item-content>
-								{{ item.title }}, {{ item.authors.join(', ') }},
-								{{ item.publisher }}, {{ item.publishDate }},{{
-									item.pages
-								}}
-							</v-list-item-content>
-							<template v-slot:append>
-								<span class="text-grey-lighten-1 text-caption mr-2">{{ item.scanTimeSpan }}</span>
-								<v-btn
-									icon="mdi-delete"
-									variant="text"
-									color="grey-lighten-1"
-									@click="
-										isbnStore.deleteResult(item.id)
-										"
-								></v-btn>
-							</template>
+						<v-list-item class="px-0 py-0">
+							<scan-preview :book="item">
+								<template #timeSpan>
+									<span class="text-body-2 text-grey-darken-2 align-end">
+										{{ item.scanTimeSpan }}
+									</span>
+								</template>
+							</scan-preview>
 						</v-list-item>
 
 						<v-divider
 							v-if="index < isbnStore.results.length - 1"
 							class="border-opacity-25"
-						></v-divider>
+						/>
 					</template>
 				</v-list>
 			</div>
 		</v-sheet>
 
-		<v-dialog
-			v-model="zoomDialog"
-			max-width="400"
-			class="rounded-lg"
-		>
-			<v-card>
-				<v-toolbar
-					color="transparent"
-					density="compact"
-				>
-					<v-toolbar-title class="text-subtitle-1">書封</v-toolbar-title>
-					<v-spacer></v-spacer>
-					<v-btn
-						icon="mdi-close"
-						@click="zoomDialog = false"
-					></v-btn>
-				</v-toolbar>
-				<v-img
-					:src="selectedImg"
-					width="100%"
-					min-height="300"
-					cover
-				>
-					<template v-slot:placeholder>
-						<div class="fill-height bg-grey-lighten-4">
-							<v-progress-linear
-								color="grey-lighten-1"
-								indeterminate
-							/>
-						</div>
-					</template>
-				</v-img>
-			</v-card>
-		</v-dialog>
+
 	</v-container>
 </template>
 
@@ -327,10 +191,13 @@
 // 1. 引入剛剛定義的倉庫
 import { useIsbnStore } from '~/stores/isbnStore';
 import { useExportStore } from '~/stores/exportStore';
+import { useUserSettingStore } from '~/stores/userSettingStore';
 import ExportDialog from '@/components/ExportDialog.vue';
-
+import ScanPreview from '@/components/ScanPreview.vue';
+import SimpleCard from '@/components/SimpleCard.vue';
 // 2. 實例化它，這樣 template 才能讀到 isbnStore
 const isbnStore = useIsbnStore();
+const userSettingStore = useUserSettingStore();
 const zoomDialog = ref(false);
 const selectedImg = ref('');
 const viewMode = ref('list');
