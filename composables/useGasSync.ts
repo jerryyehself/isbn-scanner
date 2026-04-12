@@ -1,7 +1,10 @@
+import { useIsbnStore } from '../stores/isbnStore';
+
 // composables/useGasSync.ts
 export const useGasSync = () => {
 	const isPending = ref(false);
 	const error = ref<string | null>(null);
+	const books = useIsbnStore().results;
 
 	// 這裡存放你的 GAS 部署網址 (.../exec)
 	const GAS_URL =
@@ -9,7 +12,6 @@ export const useGasSync = () => {
 
 	const execute = async (
 		action: 'sync' | 'email' | 'both',
-		books: any[],
 		email?: string,
 	) => {
 		isPending.value = true;

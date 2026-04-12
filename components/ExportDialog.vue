@@ -1,26 +1,21 @@
 <template>
 	<v-dialog
 		v-model="model"
-		width="500"
-	>
+		width="500">
 		<v-form
 			ref="exportForm"
-			@submit.prevent="submit"
-		>
+			@submit.prevent="submit">
 			<v-card title="請選擇匯出方式">
 				<v-card-text>
 					<v-radio-group
 						v-model="dialog"
-						:rules="exportRule"
-					>
+						:rules="exportRule">
 						<div
 							v-for="item in exportList"
-							:key="item.value"
-						>
+							:key="item.value">
 							<v-radio
 								:label="item.title"
-								:value="item.value"
-							/>
+								:value="item.value" />
 
 							<v-expand-transition>
 								<div
@@ -28,13 +23,11 @@
 										dialog === item.value &&
 										item.value !== 'local'
 									"
-									class="ml-6 mt-2"
-								>
+									class="ml-6 mt-2">
 									<v-text-field
 										density="compact"
 										:rules="item.rules"
-										:label="`請輸入 ${item.sub}`"
-									/>
+										:label="`請輸入 ${item.sub}`" />
 								</div>
 							</v-expand-transition>
 						</div>
@@ -44,14 +37,12 @@
 				<v-card-actions>
 					<v-btn
 						text="關閉"
-						@click="model = false"
-					/>
+						@click="model = false" />
 					<v-spacer />
 					<v-btn
 						type="submit"
 						text="確認"
-						color="primary"
-					/>
+						color="primary" />
 				</v-card-actions>
 			</v-card>
 		</v-form>
@@ -59,56 +50,59 @@
 	<v-snackbar
 		:timeout="2000"
 		color="success"
-		variant="outlined"
-	/>
+		variant="outlined" />
 </template>
 <script setup>
-import { ref } from 'vue';
-import { useExcel } from '../composables/useExcel';
+	import { ref } from 'vue';
+	import { useExcel } from '../composables/useExcel';
+	import { useGasSync } from '../composables/useGasSync';
 
-const model = defineModel({ type: Boolean }); // ⭐ Vuetify 3 + Vue3 推薦寫法
+	const model = defineModel({ type: Boolean }); // ⭐ Vuetify 3 + Vue3 推薦寫法
 
-const exportForm = ref();
-const dialog = ref(null);
+	const exportForm = ref();
+	const dialog = ref(null);
 
-const exportRule = [(v) => !!v || '請選擇匯出方式'];
+	const exportRule = [(v) => !!v || '請選擇匯出方式'];
 
-const exportList = [
-	{
-		title: '匯出到本機',
-		value: 'local',
-	},
-	{
-		title: 'Email',
-		value: 'email',
-		sub: 'Email',
-		rules: [
-			(v) => !!v || '必填',
-			(v) => /.+@.+\..+/.test(v) || '格式錯誤',
-		],
-	},
-	{
-		title: 'Google Sheet',
-		value: 'google',
-		sub: 'Sheet Key',
-		rules: [(v) => !!v || '必填'],
-	},
-];
+	const exportList = [
+		{
+			title: '匯出到本機',
+			value: 'local',
+		},
+		{
+			title: 'Email',
+			value: 'email',
+			sub: 'Email',
+			rules: [
+				(v) => !!v || '必填',
+				(v) => /.+@.+\..+/.test(v) || '格式錯誤',
+			],
+		},
+		{
+			title: 'Google Sheet',
+			value: 'google',
+			// sub: 'Sheet Key',
+			// rules: [(v) => !!v || '必填'],
+		},
+	];
 
-const submit = async () => {
-	const { valid } = await exportForm.value.validate();
-	if (!valid) return;
+	const submit = async () => {
+		const { valid } = await exportForm.value.validate();
+		if (!valid) return;
 
-	// TODO: 呼叫匯出 API
-	const excel = useExcel();
-	if (dialog.value === 'local') {
-		excel.exportData();
-	} else if (dialog.value === 'email') {
-		// 匯出到 Email
-	} else if (dialog.value === 'google') {
-		// 匯出到 Google Sheet
-	}
+		// TODO: 呼叫匯出 API
+		const excel = useExcel();
+		const gas = useGasSync();
 
-	model.value = false; // ⭐ 關閉 dialog
-};
+		if (dialog.value === 'local') {
+			excel.exportData();
+		} else if (dialog.value === 'email') {
+			gas.execute('email');
+		} else if (dialog.value === 'google') {
+			// 匯出到 Google Sheet
+			gas.execute('sync');
+		}
+
+		model.value = false; // ⭐ 關閉 dialog
+	};
 </script>
