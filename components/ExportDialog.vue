@@ -63,6 +63,7 @@
 	const dialog = ref(null);
 
 	const exportRule = [(v) => !!v || '請選擇匯出方式'];
+	const isSubmitting = ref(false); // 補上這行定義
 
 	const exportList = [
 		{
@@ -87,22 +88,34 @@
 	];
 
 	const submit = async () => {
+		// 1. 先驗證
 		const { valid } = await exportForm.value.validate();
 		if (!valid) return;
 
-		// TODO: 呼叫匯出 API
-		const excel = useExcel();
-		const gas = useGasSync();
+		try {
+			// 2. 顯示 Loading 狀態 (給使用者視覺回饋)
+			isSubmitting.value = true;
 
-		if (dialog.value === 'local') {
-			excel.exportData();
-		} else if (dialog.value === 'email') {
-			gas.execute('email');
-		} else if (dialog.value === 'google') {
-			// 匯出到 Google Sheet
-			gas.execute('sync');
+			const excel = useExcel();
+			const gas = useGasSync();
+
+			// 3. 關鍵：加上 await，確保匯出完成才關閉視窗
+			if (dialog.value === 'local') {
+				await excel.exportData();
+			} else if (dialog.value === 'email') {
+				await gas.execute('email');
+			} else if (dialog.value === 'google') {
+				await gas.execute('sync');
+			}
+
+			// 4. 匯出成功後才關閉視窗
+			model.value = false;
+		} catch (error) {
+			// 5. 如果有錯，這裡會抓到，你可以在這裡用 alert 或 toast 顯示錯誤
+			console.error('執行過程中發生錯誤:', error);
+			alert('操作失敗，請檢查網路連線');
+		} finally {
+			isSubmitting.value = false;
 		}
-
-		model.value = false; // ⭐ 關閉 dialog
 	};
 </script>
