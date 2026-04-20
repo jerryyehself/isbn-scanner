@@ -16,6 +16,7 @@ export const useDataFormatter = () => {
 			pages: item.pages || '',
 			marked: item.marked ? 'V' : '',
 			notes: item.notes || '',
+			scanTimeSpan: item.scanTimeSpan || '',
 		}));
 	};
 
@@ -28,6 +29,7 @@ export const useDataFormatter = () => {
 		{ label: '頁數', key: 'pages', width: 10 },
 		{ label: '標記', key: 'marked', width: 8 },
 		{ label: '備註', key: 'notes', width: 30 },
+		{ label: '掃描時間', key: 'scanTimeSpan', width: 50 },
 	];
 
 	return {
