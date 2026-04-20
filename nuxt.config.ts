@@ -23,4 +23,10 @@ export default defineNuxtConfig({
 	nitro: {
 		preset: 'static',
 	},
+	routeRules: {
+		// 當前端呼叫 /api-gas/** 時，完全移除前綴，直接發送給 GAS 的網址
+		'/api-gas/**': {
+			proxy: 'https://script.google.com/macros/s/AKfycbyuhAdHl409hos9-Pc_83nFOmPrT_Qt-bs-OvUfPH1ZG1MH7u-zTwu7gr1yf69Nr1og/exec',
+		},
+	},
 });
