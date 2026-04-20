@@ -90,7 +90,23 @@
 								elevation="2"
 								style="min-width: 700px;"
 							>
-								<scan-preview :book="book" />
+								<scan-preview :book="book">
+									<template #addResult>
+										<v-btn
+											variant="plain"
+											density="comfortable"
+											icon
+											@click="isbnStore.addResultToCollection(book)"
+										>
+											<v-icon icon="mdi-plus-outline" />
+											<v-tooltip
+												activator="parent"
+												location="bottom"
+												text="加入清單"
+											/>
+										</v-btn>
+									</template>
+								</scan-preview>
 							</v-card>
 						</v-slide-group-item>
 					</v-slide-group>
