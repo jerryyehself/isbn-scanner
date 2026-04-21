@@ -36,7 +36,7 @@ export default defineNuxtConfig({
 			{ code: 'en', file: 'en-US.json', name: 'English' },
 		],
 		lazy: true, // 延遲載入語系檔，優化效能
-		langDir: 'locales/',
+		langDir: '../locales',
 		defaultLocale: 'zh-TW',
 		strategy: 'no_prefix', // 如果不需要在網址加上 /en，選這個
 	},

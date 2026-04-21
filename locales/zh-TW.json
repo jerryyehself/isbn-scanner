@@ -1,0 +1,18 @@
+{
+	"app_name": "ISBN 掃描器",
+	"scan_isbn": "掃描 ISBN",
+	"enter_isbn": "輸入 ISBN",
+	"search": "搜尋",
+	"book_details": "書籍詳情",
+	"title": "標題",
+	"author": "作者",
+	"publisher": "出版社",
+	"published_date": "出版日期",
+	"description": "描述",
+	"no_results": "沒有找到相關書籍",
+	"error": "發生錯誤，請稍後再試",
+	"pages": {
+		"result": "結果",
+		"scanner": "掃描"
+	}
+}
