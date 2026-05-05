@@ -3,29 +3,30 @@
 		border
 		rounded-lg
 		class="d-flex h-100 w-100"
-		elevation="1"
-	>
+		elevation="1">
 		<v-img
 			:src="book.cover?.medium || book.cover?.small"
 			width="100"
 			min-width="100"
 			max-width="180"
 			cover
-			class="bg-grey-lighten-3"
-		>
+			class="bg-grey-lighten-3">
 			<template #placeholder>
 				<div class="d-flex align-center justify-center fill-height">
 					<v-progress-circular
 						indeterminate
-						size="24"
-					/>
+						size="24" />
 				</div>
 			</template>
 		</v-img>
-		<v-card-text class="flex-grow-1 pa-3 d-flex flex-column justify-center overflow-hidden justify-space-around">
+		<v-card-text
+			class="flex-grow-1 pa-3 d-flex flex-column justify-center overflow-hidden justify-space-around">
 			<div>
 				<div class="d-flex align-center justify-space-between">
-					<span class="text-h6 font-weight-bold text-truncate">{{ book.title || '書名加載中...' }}</span>
+					<span class="text-h6 font-weight-bold text-truncate">{{
+						book.title ||
+						$t('components.ScanPreview.loading_book_title')
+					}}</span>
 					<slot name="timeSpan" />
 				</div>
 				<v-divider />
@@ -36,10 +37,12 @@
 					<v-icon
 						size="16"
 						class="me-2 text-grey"
-						icon="mdi-account"
-					/>
+						icon="mdi-account" />
 					<span class="text-truncate">
-						{{book.authors?.map(a => a.name).join(', ') || '作者資訊加載中...'}}
+						{{
+							book.authors?.map((a) => a.name).join(', ') ||
+							$t('components.ScanPreview.loading_title')
+						}}
 					</span>
 				</div>
 
@@ -47,10 +50,12 @@
 					<v-icon
 						size="16"
 						class="me-2 text-grey"
-						icon="mdi-office-building"
-					/>
+						icon="mdi-office-building" />
 					<span class="text-truncate">
-						{{book.publishers?.map(a => a.name).join(', ') || '出版社資訊加載中...'}}
+						{{
+							book.publishers?.map((a) => a.name).join(', ') ||
+							$t('components.ScanPreview.loading_publisher')
+						}}
 					</span>
 				</div>
 
@@ -58,10 +63,12 @@
 					<v-icon
 						size="16"
 						class="me-2 text-grey"
-						icon="mdi-barcode-scan"
-					/>
+						icon="mdi-barcode-scan" />
 					<span class="font-weight-medium">
-						{{ book.isbn || 'ISBN資訊加載中...' }}
+						{{
+							book.isbn ||
+							$t('components.ScanPreview.loading_isbn')
+						}}
 					</span>
 				</div>
 			</div>
@@ -71,86 +78,76 @@
 					size="x-small"
 					variant="outlined"
 					color="primary"
-					text="繁體中文"
-				/>
+					:text="$t('components.ScanPreview.lang')" />
 				<v-chip
 					size="x-small"
 					variant="outlined"
-					text="精裝本"
-				/>
+					:text="$t('components.ScanPreview.binding')" />
 			</div>
-
 		</v-card-text>
-		<v-card-actions class="flex-column align-center justify-space-around bg-grey-lighten-2">
+		<v-card-actions
+			class="flex-column align-center justify-space-around bg-grey-lighten-2">
 			<v-btn
 				variant="plain"
 				density="comfortable"
 				icon
-				@click="book.marked = !book.marked"
-			>
-				<v-icon :icon="book.marked
-					? 'mdi-star'
-					: 'mdi-star-outline'
-					" />
+				@click="book.marked = !book.marked">
+				<v-icon :icon="book.marked ? 'mdi-star' : 'mdi-star-outline'" />
 				<v-tooltip
 					activator="parent"
 					location="bottom"
-					text="收藏"
-				/>
+					:text="$t('components.ScanPreview.collect')" />
 			</v-btn>
 			<v-btn
 				variant="plain"
 				density="comfortable"
 				icon
-				@click="noteDialog = true"
-			>
-				<v-icon :icon="book.notes.length
-					? 'mdi-text-box'
-					: 'mdi-text-box-edit-outline'
+				@click="noteDialog = true">
+				<v-icon
+					:icon="
+						book.notes.length
+							? 'mdi-text-box'
+							: 'mdi-text-box-edit-outline'
 					" />
 				<v-tooltip
 					activator="parent"
 					location="bottom"
-					text="註記"
-				/>
+					:text="$t('components.ScanPreview.note')" />
 			</v-btn>
 			<slot name="addResult" />
 			<v-btn
 				variant="plain"
 				density="comfortable"
 				icon
-				@click="isbnStore.deleteCurrentItem(book.isbn)"
-			>
+				@click="isbnStore.deleteCurrentItem(book.isbn)">
 				<v-icon icon="mdi-trash-can-outline" />
 				<v-tooltip
 					activator="parent"
 					location="bottom"
-					text="刪除"
-				/>
+					:text="$t('components.ScanPreview.delete')" />
 			</v-btn>
 		</v-card-actions>
 	</v-card>
 	<note-dialog
 		v-model="noteDialog"
-		:book="book"
-	/>
+		:book="book" />
 </template>
 
 <script setup>
-import { useIsbnStore } from '~/stores/isbnStore';
-import NoteDialog from '~/components/NoteDialog.vue';
+	import { useIsbnStore } from '~/stores/isbnStore';
+	import NoteDialog from '~/components/NoteDialog.vue';
 
-const noteDialog = ref(false);
+	const noteDialog = ref(false);
 
-const isbnStore = useIsbnStore();
-// const book = computed(() => isbnStore.current); // 假設只顯示第一本
-defineProps({
-	book: {
-		type: Object,
-		required: true,
-	},
-});
+	const isbnStore = useIsbnStore();
+	// const book = computed(() => isbnStore.current); // 假設只顯示第一本
+	defineProps({
+		book: {
+			type: Object,
+			required: true,
+		},
+	});
 
-// Emits if you want actions
-const emit = defineEmits(['delete', 'zoom']);
+	// Emits if you want actions
+	const emit = defineEmits(['delete', 'zoom']);
 </script>

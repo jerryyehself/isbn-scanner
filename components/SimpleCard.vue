@@ -2,90 +2,82 @@
 	<v-card
 		variant="flat"
 		class="rounded overflow-hidden"
-		color="surface-variant"
-	>
+		color="surface-variant">
 		<v-img
 			:src="book.cover?.medium || book.cover?.small"
 			aspect-ratio="0.7"
 			cover
-			class="align-end"
-		>
-			<v-card-actions class="align-center justify-space-around actions-bg">
+			class="align-end">
+			<v-card-actions
+				class="align-center justify-space-around actions-bg">
 				<v-btn
 					variant="plain"
-					density="comfortable"
+					density="comfortabl	e"
 					icon
-					@click="book.marked = !book.marked"
-				>
-					<v-icon :icon="book.marked
-						? 'mdi-star'
-						: 'mdi-star-outline'
-						" />
+					@click="book.marked = !book.marked">
+					<v-icon
+						:icon="book.marked ? 'mdi-star' : 'mdi-star-outline'" />
 					<v-tooltip
 						activator="parent"
 						location="bottom"
-						text="收藏"
-					/>
+						:text="$t('components.SimpleCard.collect')" />
 				</v-btn>
 				<v-btn
 					variant="plain"
 					density="comfortable"
 					icon
-					@click="noteDialog = true"
-				>
-					<v-icon :icon="book.notes.length
-						? 'mdi-text-box'
-						: 'mdi-text-box-edit-outline'
+					@click="noteDialog = true">
+					<v-icon
+						:icon="
+							book.notes.length
+								? 'mdi-text-box'
+								: 'mdi-text-box-edit-outline'
 						" />
 					<v-tooltip
 						activator="parent"
 						location="bottom"
-						text="註記"
-					/>
+						text="註記" />
 				</v-btn>
 				<slot name="addResult" />
 				<v-btn
 					variant="plain"
 					density="comfortable"
 					icon
-					@click="isbnStore.deleteCurrentItem(book.isbn)"
-				>
+					@click="isbnStore.deleteCurrentItem(book.isbn)">
 					<v-icon icon="mdi-trash-can-outline" />
 					<v-tooltip
 						activator="parent"
 						location="bottom"
-						text="刪除"
-					/>
+						:text="$t('components.SimpleCard.delete')" />
 				</v-btn>
 			</v-card-actions>
 		</v-img>
 	</v-card>
 	<note-dialog
 		v-model="noteDialog"
-		:book="book"
-	/>
+		:book="book" />
 </template>
 
 <script setup>
-import { useIsbnStore } from '~/stores/isbnStore';
-import NoteDialog from '~/components/NoteDialog.vue';
+	import { useIsbnStore } from '~/stores/isbnStore';
+	import NoteDialog from '~/components/NoteDialog.vue';
 
-const noteDialog = ref(false);
+	const noteDialog = ref(false);
 
-const isbnStore = useIsbnStore();
-// const book = computed(() => isbnStore.current); // 假設只顯示第一本
-defineProps({
-	book: {
-		type: Object,
-		required: true,
-	},
-});
+	const isbnStore = useIsbnStore();
+	// const book = computed(() => isbnStore.current); // 假設只顯示第一本
+	defineProps({
+		book: {
+			type: Object,
+			required: true,
+		},
+	});
 
-// Emits if you want actions
-const emit = defineEmits(['delete', 'zoom']);
+	// Emits if you want actions
+	const emit = defineEmits(['delete', 'zoom']);
 </script>
 <style>
-.actions-bg {
-	background: rgba(128, 128, 128, 0.7);
-}
+	.actions-bg {
+		background: rgba(128, 128, 128, 0.7);
+	}
 </style>

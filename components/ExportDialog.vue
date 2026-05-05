@@ -5,7 +5,7 @@
 		<v-form
 			ref="exportForm"
 			@submit.prevent="submit">
-			<v-card title="請選擇匯出方式">
+			<v-card :title="$t('components.ExportDialog.export_options')">
 				<v-card-text>
 					<v-radio-group
 						v-model="dialog"
@@ -27,7 +27,12 @@
 									<v-text-field
 										density="compact"
 										:rules="item.rules"
-										:label="`請輸入 ${item.sub}`" />
+										:label="
+											$t(
+												'components.ExportDialog.import_tips',
+												{ sub: item.sub },
+											)
+										" />
 								</div>
 							</v-expand-transition>
 						</div>
@@ -36,12 +41,12 @@
 
 				<v-card-actions>
 					<v-btn
-						text="關閉"
+						:text="$t('components.ExportDialog.close')"
 						@click="model = false" />
 					<v-spacer />
 					<v-btn
 						type="submit"
-						text="確認"
+						:text="$t('components.ExportDialog.confirm')"
 						color="primary" />
 				</v-card-actions>
 			</v-card>
@@ -53,18 +58,18 @@
 		variant="outlined" />
 </template>
 <script setup>
-	import { ref } from 'vue';
-
-	const model = defineModel({ type: Boolean }); // ⭐ Vuetify 3 + Vue3 推薦寫法
+	const model = defineModel({ type: Boolean });
 
 	const exportForm = ref();
 	const dialog = ref(null);
 
-	const exportRule = [(v) => !!v || '請選擇匯出方式'];
+	const exportRule = [
+		(v) => !!v || $t('components.ExportDialog.select_export_method_tips'),
+	];
 
-	const exportList = [
+	const exportList = computed(() => [
 		{
-			title: '匯出到本機',
+			title: $t('components.ExportDialog.local'),
 			value: 'local',
 		},
 		{
@@ -72,17 +77,19 @@
 			value: 'email',
 			sub: 'Email',
 			rules: [
-				(v) => !!v || '必填',
-				(v) => /.+@.+\..+/.test(v) || '格式錯誤',
+				(v) => !!v || $t('components.ExportDialog.required'),
+				(v) =>
+					/.+@.+\..+/.test(v) ||
+					$t('components.ExportDialog.invalid_email'),
 			],
 		},
 		{
 			title: 'Google Sheet',
 			value: 'google',
 			sub: 'Sheet Key',
-			rules: [(v) => !!v || '必填'],
+			rules: [(v) => !!v || $t('components.ExportDialog.required')],
 		},
-	];
+	]);
 
 	const submit = async () => {
 		const { valid } = await exportForm.value.validate();

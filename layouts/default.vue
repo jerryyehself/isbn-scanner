@@ -8,7 +8,7 @@
 						variant="text"
 						@click.stop="drawer = !drawer" />
 				</template>
-				<v-app-bar-title>ISBN Scanner</v-app-bar-title>
+				<v-app-bar-title :text="$t('app_name')" />
 				<template>
 					<v-select
 						v-model="$i18n.locale"

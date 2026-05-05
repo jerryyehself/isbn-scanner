@@ -1,18 +1,60 @@
 {
-	"app_name": "ISBN 掃描器",
-	"scan_isbn": "掃描 ISBN",
-	"enter_isbn": "輸入 ISBN",
-	"search": "搜尋",
-	"book_details": "書籍詳情",
-	"title": "標題",
-	"author": "作者",
-	"publisher": "出版社",
-	"published_date": "出版日期",
-	"description": "描述",
-	"no_results": "沒有找到相關書籍",
-	"error": "發生錯誤，請稍後再試",
+	"app_name": "ISBN scanner",
+	"scan_isbn": "Scan ISBN",
+	"enter_isbn": "Enter ISBN",
+	"search": "Search",
+	"book_details": "Book Details",
+	"title": "Title",
+	"author": "Author",
+	"publisher": "Publisher",
+	"published_date": "Published Date",
+	"description": "Description",
+	"no_results": "No results found",
+	"error": "An error occurred, please try again later",
 	"pages": {
 		"result": "Results",
 		"scanner": "Scanner"
+	},
+	"index_page": {
+		"click_to_scan": "Click to start scanning",
+		"aiming_tips": "Aim the barcode at the center of the screen",
+		"preview_tips": "After scanning, book information will be displayed automatically",
+		"add_default": "Add default",
+		"add_all": "Add all",
+		"added_to_list": "Added to list"
+	},
+	"list_page": {
+		"sub_title": "Scan History",
+		"result_count": "Total {count} records",
+		"export_options": "Export Data",
+		"clear_all": "Delete All Records",
+		"list_view": "List View",
+		"grid_view": "Grid View"
+	},
+	"components": {
+		"ScanPreview": {
+			"loading_title": "Loading book title...",
+			"loading_publisher": "Loading publisher information...",
+			"loading_isbn": "Loading ISBN information...",
+			"lang": "Traditional Chinese",
+			"binding": "bulkhead",
+			"delete": "Delete",
+			"collect": "Collect",
+			"note": "Note"
+		},
+		"SimpleCard": {
+			"collect": "Collect",
+			"delete": "Delete"
+		},
+		"ExportDialog": {
+			"export_options": "Please select export method",
+			"close": "Close",
+			"confirm": "Confirm",
+			"select_export_method_tips": "Please select export method",
+			"local": "Export to local",
+			"required": "Required",
+			"invalid_email": "Invalid email format",
+			"import_tips": "Please enter {sub}"
+		}
 	}
 }

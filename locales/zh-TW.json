@@ -14,5 +14,48 @@
 	"pages": {
 		"result": "結果",
 		"scanner": "掃描"
+	},
+	"index_page": {
+		"click_to_scan": "點擊開始掃描",
+		"aiming_tips": "將條碼對準畫面中央",
+		"preview_tips": "掃描完成後將自動顯示書籍資訊",
+		"add_default": "默認加入",
+		"add_all": "全部加入",
+		"added_to_list": "已加入清單",
+		"last_item_prefix": "最後一筆："
+	},
+	"list_page": {
+		"sub_title": "掃描紀錄",
+		"result_count": "共 {count} 筆",
+		"export_options": "匯出資料",
+		"clear_all": "刪除所有紀錄",
+		"list_view": "條列檢視",
+		"grid_view": "網格檢視"
+	},
+	"components": {
+		"ScanPreview": {
+			"loading_title": "載入書籍標題...",
+			"loading_publisher": "載入出版社資訊...",
+			"loading_isbn": "載入 ISBN ...",
+			"lang": "繁體中文",
+			"binding": "精裝本",
+			"delete": "刪除",
+			"collect": "收藏",
+			"note": "註記"
+		},
+		"SimpleCard": {
+			"collect": "收藏",
+			"delete": "刪除"
+		},
+		"ExportDialog": {
+			"export_options": "請選擇匯出方式",
+			"close": "關閉",
+			"confirm": "確認",
+			"select_export_method_tips": "請選擇匯出方式",
+			"local": "匯出到本機",
+			"required": "必填",
+			"invalid_email": "email格式錯誤",
+			"import_tips": "請輸入 {sub}"
+		}
 	}
 }
