@@ -107,7 +107,7 @@
 											<v-tooltip
 												activator="parent"
 												location="bottom"
-												text="加入清單"
+												:text="$t('index_page.add_to_list')"
 											/>
 										</v-btn>
 									</template>

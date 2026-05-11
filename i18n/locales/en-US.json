@@ -21,6 +21,8 @@
         "preview_tips": "After scanning, book information will be displayed automatically",
         "add_default": "Add default",
         "add_all": "Add all",
+        "add_to_list": "Add to List",
+        "added_the_book_to_list": "Added {title} to list",
         "added_to_list": "Added to list",
         "count_summary": "Currently added {count} items, the previous one is {title}"
     },
@@ -29,8 +31,10 @@
         "result_count": "Total {count} records",
         "export_options": "Export Data",
         "clear_all": "Delete All Records",
+        "clear_all_confirmation": "Are you sure you want to delete all records?",
         "list_view": "List View",
-        "grid_view": "Grid View"
+        "grid_view": "Grid View",
+        "empty_tips": "No records yet, please scan some books first"
     },
     "components": {
         "ScanPreview": {

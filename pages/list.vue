@@ -95,7 +95,7 @@
 			class="flex-grow-1 d-flex align-center justify-center"
 			v-if="isbnStore.results.length === 0"
 		>
-			目前沒有紀錄
+			{{ $t('list_page.empty_tips') }}
 		</v-sheet>
 		<v-sheet
 			v-else
@@ -171,8 +171,7 @@
 							<scan-preview :book="item">
 								<template #timeSpan>
 									<span class="text-body-2 text-grey-darken-2 align-end">
-										{{ $d(new Date(), 'long', 'zh-TW') }}
-										<!-- {{ item.scanTimeSpan }} -->
+										{{ $d(new Date(), 'long') }}
 									</span>
 								</template>
 							</scan-preview>
@@ -197,16 +196,19 @@ import { useUserSettingStore } from '~/stores/userSettingStore';
 import ExportDialog from '@/components/ExportDialog.vue';
 import ScanPreview from '@/components/ScanPreview.vue';
 import SimpleCard from '@/components/SimpleCard.vue';
+
 // 2. 實例化它，這樣 template 才能讀到 isbnStore
 const isbnStore = useIsbnStore();
 const userSettingStore = useUserSettingStore();
 const zoomDialog = ref(false);
 const selectedImg = ref('');
 const viewMode = ref('list');
+const { t } = useI18n();
+
 
 // 這裡不需要寫任何 function，除非你想做「刪除」或「清空」功能
 const clearAll = () => {
-	if (confirm('確定要清空所有紀錄嗎？')) {
+	if (confirm(t("list_page.clear_all_confirmation"))) {
 		isbnStore.results = [];
 		isbnStore.nextId = 1;
 	}

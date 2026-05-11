@@ -120,13 +120,12 @@ export const useIsbnStore = defineStore("isbn", () => {
         text: "",
         color: "success",
     });
+    const { t } = useI18n();
 
     const userSettingStore = useUserSettingStore();
 
-    // 2. Getters (使用 computed)
     const lastResult = computed(() => results.value[0]);
 
-    // 3. Actions (使用 function)
     async function fetchBookInfo(isbn: string) {
         if (results.value.some((item) => item.isbn === isbn)) {
             console.log("此 ISBN 已存在");
@@ -167,10 +166,12 @@ export const useIsbnStore = defineStore("isbn", () => {
 
         snackbar.value = {
             show: true,
-            text: `已將 ${currentItem.title} 加入清單`,
+            text: t("index_page.added_the_book_to_list", {
+                title: currentItem.title,
+            }),
             color: "success",
         };
-
+        // alert(snackbar.value.text);
         currentList.value = currentList.value.filter(
             (item) => item.isbn !== currentItem.isbn,
         );

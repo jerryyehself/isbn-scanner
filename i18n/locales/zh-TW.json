@@ -21,7 +21,9 @@
         "preview_tips": "掃描完成後將自動顯示書籍資訊",
         "add_default": "默認加入",
         "add_all": "全部加入",
+        "add_to_list": "加入清單",
         "added_to_list": "已加入清單",
+        "added_the_book_to_list": "已將 {title} 加入清單",
         "last_item_prefix": "最後一筆：",
         "count_summary": "目前已加入 {count} 筆資料，前一筆為 {title}"
     },
@@ -30,8 +32,10 @@
         "result_count": "共 {count} 筆",
         "export_options": "匯出資料",
         "clear_all": "刪除所有紀錄",
+        "clear_all_confirmation": "確定要刪除所有紀錄嗎？",
         "list_view": "條列檢視",
-        "grid_view": "網格檢視"
+        "grid_view": "網格檢視",
+        "empty_tips": "目前沒有紀錄，請先掃描書籍"
     },
     "components": {
         "ScanPreview": {

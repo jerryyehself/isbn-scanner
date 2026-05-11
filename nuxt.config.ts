@@ -32,13 +32,33 @@ export default defineNuxtConfig({
     modules: ["@nuxtjs/i18n"],
     i18n: {
         locales: [
-            { code: "zh-TW", file: "zh-TW.json", name: "繁體中文" },
-            { code: "en", file: "en-US.json", name: "English" },
+            {
+                code: "zh-TW",
+                iso: "zh-TW", // 加上這個
+                name: "繁體中文",
+                file: "zh-TW.json",
+            },
+            {
+                code: "en",
+                iso: "en-US", // 加上這個
+                name: "English",
+                file: "en-US.json",
+            },
         ],
-        lazy: true, // 延遲載入語系檔，優化效能
-        langDir: "../locales",
         defaultLocale: "zh-TW",
+        detectBrowserLanguage: {
+            useCookie: true,
+            fallbackLocale: "zh-TW", // 務必指定 fallback，找不到 zh 就用 zh-TW
+            alwaysRedirect: false,
+        },
+        langDir: "locales",
         strategy: "no_prefix", // 如果不需要在網址加上 /en，選這個
-        vueI18n: "./i18n.config.ts",
+        vueI18n: "i18n.config.ts",
+        bundle: {
+            fullInstall: true,
+        },
+        experimental: {
+            localeDetector: "", // 保持預設或空白
+        },
     },
 });
