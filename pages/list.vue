@@ -6,10 +6,14 @@
 		>
 			<v-toolbar-title
 				class="flex-shrink-0 ml-0 font-weight-bold"
-				text="掃描紀錄"
+				:text="$t('list_page.sub_title')"
 			>
 				<div class="text-caption text-grey">
-					共 {{ isbnStore.results.length }} 筆
+					{{
+						$t('list_page.result_count', {
+							count: isbnStore.results.length,
+						})
+					}}
 				</div>
 			</v-toolbar-title>
 			<client-only>
@@ -27,7 +31,7 @@
 					<v-tooltip
 						activator="parent"
 						location="bottom"
-						text="匯出資料"
+						:text="$t('list_page.export_options')"
 					/>
 				</v-btn>
 				<ExportDialog v-model="exportDialog" />
@@ -46,7 +50,7 @@
 					<v-tooltip
 						activator="parent"
 						location="bottom"
-						text="刪除所有紀錄"
+						:text="$t('list_page.clear_all')"
 					/>
 				</v-btn>
 				<v-btn-toggle
@@ -67,7 +71,7 @@
 						<v-tooltip
 							activator="parent"
 							location="bottom"
-							text="條列檢視"
+							:text="$t('list_page.list_view')"
 						/>
 					</v-btn>
 					<v-btn
@@ -81,7 +85,7 @@
 						<v-tooltip
 							activator="parent"
 							location="bottom"
-							text="網格檢視"
+							:text="$t('list_page.grid_view')"
 						/>
 					</v-btn>
 				</v-btn-toggle>
@@ -91,7 +95,7 @@
 			class="flex-grow-1 d-flex align-center justify-center"
 			v-if="isbnStore.results.length === 0"
 		>
-			目前沒有紀錄
+			{{ $t('list_page.empty_tips') }}
 		</v-sheet>
 		<v-sheet
 			v-else
@@ -99,9 +103,8 @@
 		>
 			<div
 				v-if="userSettingStore.resultViewMode == 'grid'"
-				class="w-100 h-100 overflow-y-auto overflow-x-hidden "
+				class="w-100 h-100 overflow-y-auto overflow-x-hidden"
 			>
-
 				<v-row
 					dense
 					align="start"
@@ -168,7 +171,7 @@
 							<scan-preview :book="item">
 								<template #timeSpan>
 									<span class="text-body-2 text-grey-darken-2 align-end">
-										{{ item.scanTimeSpan }}
+										{{ $d(new Date(), 'long') }}
 									</span>
 								</template>
 							</scan-preview>
@@ -182,8 +185,6 @@
 				</v-list>
 			</div>
 		</v-sheet>
-
-
 	</v-container>
 </template>
 
@@ -195,16 +196,19 @@ import { useUserSettingStore } from '~/stores/userSettingStore';
 import ExportDialog from '@/components/ExportDialog.vue';
 import ScanPreview from '@/components/ScanPreview.vue';
 import SimpleCard from '@/components/SimpleCard.vue';
+
 // 2. 實例化它，這樣 template 才能讀到 isbnStore
 const isbnStore = useIsbnStore();
 const userSettingStore = useUserSettingStore();
 const zoomDialog = ref(false);
 const selectedImg = ref('');
 const viewMode = ref('list');
+const { t } = useI18n();
+
 
 // 這裡不需要寫任何 function，除非你想做「刪除」或「清空」功能
 const clearAll = () => {
-	if (confirm('確定要清空所有紀錄嗎？')) {
+	if (confirm(t("list_page.clear_all_confirmation"))) {
 		isbnStore.results = [];
 		isbnStore.nextId = 1;
 	}

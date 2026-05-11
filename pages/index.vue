@@ -22,7 +22,9 @@
 							color="primary"
 							icon="mdi-barcode-scan"
 						/>
-						<span class="text-h6 font-medium">點擊開始掃描 ISBN</span>
+						<span class="text-h6 font-medium">
+							{{ $t('index_page.click_to_scan') }}
+						</span>
 					</div>
 				</v-btn>
 
@@ -56,7 +58,7 @@
 							prepend-icon="mdi-information"
 							variant="text"
 						>
-							請將書籍背面的 ISBN 條碼對準對焦框
+							{{ $t('index_page.aiming_tips') }}
 						</v-chip>
 					</v-card-text>
 				</v-card>
@@ -65,7 +67,6 @@
 			<v-divider />
 
 			<v-sheet class="flex-grow-1 d-flex flex-column align-center justify-center bg-surface overflow-hidden">
-
 				<div
 					v-if="isbnStore.currentList.length"
 					class="w-75 h-50 overflow-y-auto d-flex flex-column justify-space-around align-center"
@@ -88,7 +89,7 @@
 								:class="['ma-2', 'w-100']"
 								@click="toggle"
 								elevation="2"
-								style="min-width: 700px;"
+								style="min-width: 700px"
 							>
 								<scan-preview :book="book">
 									<template #addResult>
@@ -96,13 +97,17 @@
 											variant="plain"
 											density="comfortable"
 											icon
-											@click="isbnStore.addResultToCollection(book)"
+											@click="
+												isbnStore.addResultToCollection(
+													book,
+												)
+												"
 										>
 											<v-icon icon="mdi-plus-outline" />
 											<v-tooltip
 												activator="parent"
 												location="bottom"
-												text="加入清單"
+												:text="$t('index_page.add_to_list')"
 											/>
 										</v-btn>
 									</template>
@@ -122,33 +127,38 @@
 						icon="mdi-book-open-variant"
 					/>
 					<div class="text-h6 text-medium-emphasis mt-4 text-center">
-						請將 ISBN 條碼置於畫面中央
+						{{ $t('index_page.aiming_tips') }}
 					</div>
 					<div class="text-caption text-grey-darken-1 mt-2">
-						掃描完成後將自動顯示書籍資訊
+						{{ $t('index_page.preview_tips') }}
 					</div>
 				</div>
 				<div class="w-75 pa-5 d-flex flex-column justify-center">
 					<v-row>
 						<v-col class="text-subtitle-1 font-weight-medium d-flex w-100 align-center justify-center">
-							<div>
-								目前已加入
-								<v-chip
-									label
-									size="small"
-									:text="isbnStore.results.length"
-								/>
-								筆資料
-							</div>
-							<div v-if="isbnStore.results.length">
-								，前一筆為
-								<v-chip
-									label
-									size="small"
-									class="font-italic"
-									:text="isbnStore.lastResult.title"
-								/>
-							</div>
+							<i18n-t
+								keypath="index_page.count_summary"
+								tag="div"
+							>
+								<template #count>
+									<v-chip
+										label
+										size="small"
+										:text="isbnStore.results.length"
+									/>
+								</template>
+								<template
+									v-if="isbnStore.results.length"
+									#title
+								>
+									<v-chip
+										label
+										size="small"
+										class="font-italic"
+										:text="isbnStore.lastResult.title"
+									/>
+								</template>
+							</i18n-t>
 						</v-col>
 					</v-row>
 					<v-row>
@@ -199,11 +209,9 @@ const userSettingStore = useUserSettingStore();
 isbnStore.fetchBookInfo('0789312239');
 isbnStore.fetchBookInfo('9787537815789');
 
-
-
 const bookActions = computed(() => [
 	{
-		title: '默認加入',
+		title: $t('index_page.add_default'),
 		icon: 'mdi-information',
 		disabled: false,
 		color: 'primary',
@@ -214,17 +222,19 @@ const bookActions = computed(() => [
 			: 'mdi-circle-outline',
 	},
 	{
-		title: '全部加入',
+		title: $t('index_page.add_all'),
 		icon: 'mdi-book-plus',
-		disabled: userSettingStore.addDefault || isbnStore.currentList.length === 0,
+		disabled:
+			userSettingStore.addDefault ||
+			isbnStore.currentList.length === 0,
 		color: 'success',
 		toggle: () => {
 			isbnStore.currentList.forEach((item) => {
-				if (!isbnStore.results.some(r => r.isbn === item.isbn)) {
+				if (!isbnStore.results.some((r) => r.isbn === item.isbn)) {
 					isbnStore.addResultToCollection(item);
 				}
 			});
-			message.value = '已加入清單';
+			message.value = $t('index_page.added_to_list');
 		},
 		active: false,
 	},
