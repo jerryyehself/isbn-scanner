@@ -5,7 +5,7 @@
 		<v-form
 			ref="exportForm"
 			@submit.prevent="submit">
-			<v-card title="請選擇匯出方式">
+			<v-card :title="$t('components.ExportDialog.export_options')">
 				<v-card-text>
 					<v-radio-group
 						v-model="dialog"
@@ -24,7 +24,12 @@
 									<v-text-field
 										density="compact"
 										:rules="item.rules"
-										:label="`請輸入 ${item.sub}`"
+										:label="
+											$t(
+												'components.ExportDialog.import_tips',
+												{ sub: item.sub },
+											)
+										"
 										v-model="item.subValue.value" />
 								</div>
 							</v-expand-transition>
@@ -34,13 +39,13 @@
 
 				<v-card-actions>
 					<v-btn
-						text="關閉"
+						:text="$t('components.ExportDialog.close')"
 						@click="model = false" />
 					<v-spacer />
 					<v-btn
 						type="submit"
-						text="確認"
-						color="primary"
+            color="primary"
+						:text="$t('components.ExportDialog.confirm')"
 						:loading="isSubmitting"
 						:disabled="isSubmitting" />
 				</v-card-actions>
@@ -64,19 +69,21 @@
 	const dialog = ref(null);
 	const email = ref(null); // 如果需要綁定 email 輸入框，這裡也要定義一個 ref 來接收值
 
-	const isSubmitting = ref(false); // 補上這行定義
+	const exportRule = [
+		(v) => !!v || $t('components.ExportDialog.select_export_method_tips'),
+	];
+  const isSubmitting = ref(false); // 補上這行定義
 	const submitResult = ref({ status: null, text: null });
-
-	const exportList = {
-		local: {
-			title: '直接匯出',
+	const exportList = computed(() => [
+		{
+			title: $t('components.ExportDialog.local'),
 			value: 'local',
 			action: async () => {
 				const excel = useExcel();
 				await excel.exportData();
 			},
 		},
-		gs: {
+		{
 			title: '匯入Google Sheet',
 			value: 'gs',
 			action: async () => {
@@ -84,21 +91,29 @@
 				await gas.execute('sync');
 			},
 		},
-		email: {
-			title: '寄至Email',
+		{
+			title: 'Email',
 			value: 'email',
 			sub: 'Email',
 			subValue: email,
 			rules: [
-				(v) => !!v || '必填',
-				(v) => /.+@.+\..+/.test(v) || '格式錯誤',
+				(v) => !!v || $t('components.ExportDialog.required'),
+				(v) =>
+					/.+@.+\..+/.test(v) ||
+					$t('components.ExportDialog.invalid_email'),
 			],
 			action: async () => {
 				const gas = useGasSync();
 				await gas.execute('email', email.value);
 			},
 		},
-	};
+		{
+			title: 'Google Sheet',
+			value: 'google',
+			sub: 'Sheet Key',
+			rules: [(v) => !!v || $t('components.ExportDialog.required')],
+		},
+	]);
 
 	const submit = async () => {
 		// 1. 先驗證

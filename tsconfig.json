@@ -1,0 +1,4 @@
+{
+  // 這是最重要的部分：繼承 Nuxt 自動產生的設定
+  "extends": "./.nuxt/tsconfig.json"
+}
