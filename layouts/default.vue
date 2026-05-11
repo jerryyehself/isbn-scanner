@@ -9,13 +9,13 @@
 						@click.stop="drawer = !drawer" />
 				</template>
 				<v-app-bar-title :text="$t('app_name')" />
-				<template>
+				<client-only>
 					<v-select
 						v-model="$i18n.locale"
 						:items="['zh-TW', 'en']"
 						label="Language"
 						@update:model-value="setLocale" />
-				</template>
+				</client-only>
 				<template v-slot:append>
 					<v-btn
 						:icon="
