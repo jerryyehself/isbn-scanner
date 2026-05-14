@@ -177,6 +177,8 @@
 </template>
 
 <script setup>
+	const { t } = useI18n();
+
 	import { ref, nextTick } from 'vue';
 	import { Html5Qrcode } from 'html5-qrcode';
 	import isbn from 'isbn3';
@@ -188,12 +190,12 @@
 
 	const isbnStore = useIsbnStore();
 	const userSettingStore = useUserSettingStore();
-	isbnStore.fetchBookInfo('0789312239');
-	isbnStore.fetchBookInfo('9787537815789');
+	// isbnStore.fetchBookInfo('0789312239');
+	// isbnStore.fetchBookInfo('9787537815789');
 
 	const bookActions = computed(() => [
 		{
-			title: $t('index_page.add_default'),
+			title: t('index_page.add_default'),
 			icon: 'mdi-information',
 			disabled: false,
 			color: 'primary',
@@ -216,7 +218,7 @@
 						isbnStore.addResultToCollection(item);
 					}
 				});
-				message.value = $t('index_page.added_to_list');
+				message.value = t('index_page.added_to_list');
 			},
 			active: false,
 		},

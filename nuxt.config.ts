@@ -31,6 +31,7 @@ export default defineNuxtConfig({
 
 	modules: ['@nuxtjs/i18n', '@pinia/nuxt'],
 	i18n: {
+		strategy: 'prefix_except_default',
 		locales: [
 			{
 				code: 'zh-TW',
@@ -48,11 +49,10 @@ export default defineNuxtConfig({
 		defaultLocale: 'zh-TW',
 		detectBrowserLanguage: {
 			useCookie: true,
-			fallbackLocale: 'zh-TW', // 務必指定 fallback，找不到 zh 就用 zh-TW
-			alwaysRedirect: false,
+			alwaysRedirect: true, // 設為 true，當使用者輸入 / 時會自動跳到 /zh-TW 或 /en
+			fallbackLocale: 'zh-TW',
 		},
 		langDir: 'locales',
-		strategy: 'no_prefix', // 如果不需要在網址加上 /en，選這個
 		vueI18n: 'i18n.config.ts',
 		bundle: {
 			fullInstall: true,
@@ -61,7 +61,6 @@ export default defineNuxtConfig({
 			localeDetector: '', // 保持預設或空白
 		},
 	},
-	detectBrowserLanguage: false, // 建議先關閉，減少 Hydration 衝突
 	devtools: {
 		timeline: {
 			enabled: true,

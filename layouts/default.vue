@@ -11,10 +11,20 @@
 				<v-app-bar-title :text="$t('app_name')" />
 				<client-only>
 					<v-select
-						v-model="$i18n.locale"
-						:items="['zh-TW', 'en']"
+						:model-value="$i18n.locale"
+						:items="[
+							{ title: '繁體中文', value: 'zh-TW' },
+							{ title: 'English', value: 'en' },
+						]"
+						item-title="title"
+						item-value="value"
 						label="Language"
-						@update:model-value="setLocale" />
+						density="compact"
+						hide-details
+						style="max-width: 150px"
+						@update:model-value="
+							(n) => $router.push(switchLocalePath(n))
+						" />
 				</client-only>
 				<template v-slot:append>
 					<v-btn
@@ -34,7 +44,7 @@
 					<v-list-item
 						v-for="item in pages"
 						:key="item.value"
-						:to="item.to"
+						:to="localePath(item.to)"
 						:title="$t('pages.' + item.title)" />
 				</v-list>
 			</v-navigation-drawer>
@@ -50,7 +60,9 @@
 </template>
 
 <script setup>
-	const { t, setLocale } = useI18n();
+	const localePath = useLocalePath();
+	const switchLocalePath = useSwitchLocalePath(); // 記得加這一行
+	const { locale } = useI18n(); // 如果需要監控當前語系
 	const theme = ref('light');
 
 	function onClick() {
